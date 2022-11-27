@@ -1,0 +1,23 @@
+<div class="jumbotron" style="background-color:#F0F8FF;">
+    {% include 'navbar.html' %}
+	<h1 style="font-variant: small-caps;">Register</h1>
+	<form action="" method="POST">
+        <div class="form-group">
+			<label style="font-size: 20px;" class="font-italic">Full Name</label>
+			<input type="text" name="name" class = "form-control" value="{{request.form.name}}">
+		</div>
+        <div class="form-group">
+			<label style="font-size: 20px;" class="font-italic">Email</label>
+			<input type="text" name="email" class = "form-control" value="{{request.form.email}}">
+		</div>
+		<div class="form-group">
+			<label style="font-size: 20px;" class="font-italic">Username</label>
+			<input type="text" name="username" class = "form-control" value="{{request.form.username}}">
+		</div>
+		<div class="form-group">
+			<label style="font-size: 20px;" class="font-italic">Password</label>
+			<input type="password" name="password" class = "form-control" value="{{request.form.password}}">
+		</div>
+		<button type="submit" class="btn btn-primary">Register</button>
+	</form> 
+	</div>
