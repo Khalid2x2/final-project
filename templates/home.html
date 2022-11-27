@@ -4,7 +4,7 @@
 <h1 class="text-center">introverse A guide to Peace</h1>
 
 {% if user.is_active %}
-    <p class="text-center p-4">You are logged in as <strong>{{ user.username }}</strong>, <a href="{% url 'logout' %}">logout</a></p>
+    <p class="text-center p-4">You are logged in as <strong><a class="text-dark text-decoration-none" href="{% url 'user-profile' user.username %}">{{ user.username }}</a></strong>, <a href="{% url 'logout' %}">logout</a></p>
 {% endif %}
     
 {% endblock content %}

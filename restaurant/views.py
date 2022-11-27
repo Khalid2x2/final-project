@@ -15,6 +15,9 @@ def restaurants(request):
     }
     return render(request, 'profile.html', context)
 
+def user_profile(request,username):
+    return render(request, 'profile.html')
+
 def user_register(request):
     context = {
         'title': 'Registration',

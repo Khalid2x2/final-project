@@ -23,7 +23,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a class="nav-link {% if home_page %}active{% endif %}" href="/">Home</a>
-                        <a class="nav-link {% if restaurants_page %}active{% endif %}" href="#">Restaurants</a>
+                        <a class="nav-link {% if restaurants_page %}active{% endif %}" href="{% url 'restaurants' %}">Restaurants</a>
                         {% if not user.is_active %}
                             <a class="nav-link {% if login_page %}active{% endif %}" href="{% url 'login' %}">Login</a>
                         {% else %}
