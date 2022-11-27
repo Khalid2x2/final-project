@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from .models import Restaurant
+
 def index(request):
     context = {
         'home_page': True
@@ -10,12 +12,22 @@ def index(request):
     return render(request, 'home.html', context)
 
 def restaurants(request):
-    context = {
-        'restaurants_page': True
-    }
-    return render(request, 'profile.html', context)
+    if request.method == "GET":
+        restaurants = Restaurant.objects.all()
+        context = {
+            'restaurants_page': True,
+            'restaurants': restaurants
+        }
+        return render(request, 'restaurants.html', context)
+    elif request.method == "POST":
+        new_restaurant = Restaurant.objects.create(
+            name=request.POST.get("restaurant-name"),
+            address=request.POST.get("restaurant-address"),
+        )
+        new_restaurant.save()
+        return redirect('restaurants')
 
-def user_profile(request,username):
+def user_profile(request, username):
     return render(request, 'profile.html')
 
 def user_register(request):
