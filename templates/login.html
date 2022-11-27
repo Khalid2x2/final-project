@@ -1,15 +1,20 @@
-<div class="jumbotron" style="background-color:#F0F8FF;">
-    {% include 'navbar.html' %}
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="jumbotron mx-auto rounded-2 p-2" style="background-color:#F0F8FF;">
 	<h1 style="font-variant: small-caps;">Login</h1>
-	<form action="" method="POST">
+	<form action="{% url 'login' %}" method="POST">
+		{% csrf_token %}
 		<div class="form-group">
 			<label style="font-size: 20px;" class="font-italic">Username</label>
-			<input type="text" name="username" class = "form-control" value="{{request.form.username}}">
+			<input type="text" name="username" class = "form-control">
 		</div>
 		<div class="form-group">
 			<label style="font-size: 20px;" class="font-italic">Password</label>
-			<input type="password" name="password" class = "form-control" value="{{request.form.password}}">
+			<input type="password" name="password" class = "form-control">
 		</div>
-		<button type="submit" class="btn btn-primary">Login</button>
+		<button type="submit" class="btn w-100 btn-primary mt-2">Login</button>
 	</form> 
-	</div>
+</div>
+{% endblock content %}
+	
