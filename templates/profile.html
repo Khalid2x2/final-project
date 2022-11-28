@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="profile bg-light rounded-4 p-5">
-	<form action="{% url 'user-profile' user.username %}" method="post">
+	<form action="{% url 'user-profile' user.username %}" method="POST">
 		{% csrf_token %}
 		<table>
 			<tbody>
