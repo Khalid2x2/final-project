@@ -2,8 +2,11 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
 
-from .models import Restaurant
+from datetime import datetime
+
+from .models import Restaurant, Feedback
 
 def index(request):
     context = {
@@ -12,12 +15,13 @@ def index(request):
     return render(request, 'home.html', context)
 
 def restaurants(request):
+    context = {
+        'title': 'Restaurants',
+        'restaurants_page': True,
+    }
     if request.method == "GET":
         restaurants = Restaurant.objects.all()
-        context = {
-            'restaurants_page': True,
-            'restaurants': restaurants
-        }
+        context['restaurants'] = restaurants
         return render(request, 'restaurants.html', context)
     elif request.method == "POST":
         new_restaurant = Restaurant.objects.create(
@@ -26,6 +30,42 @@ def restaurants(request):
         )
         new_restaurant.save()
         return redirect('restaurants')
+
+def edit_restaurant(request,pk):
+    if request.method == "POST":
+        restaurant = Restaurant.objects.get(id=pk)
+        restaurant.name = request.POST.get("restaurant-name")
+        restaurant.address = request.POST.get("restaurant-address")
+        restaurant.save()
+        return redirect("restaurants")
+
+def delete_restaurant(request,pk):
+    restaurant = Restaurant.objects.get(id=pk)
+    restaurant.delete()
+    return redirect("restaurants")
+
+def feedback(request,pk):
+    restaurant = Restaurant.objects.get(id=pk)
+    feedback = request.POST.get("feedback","")
+    stars = request.POST.get("stars",0)
+    new_fb = Feedback.objects.create(
+        feedback=feedback,
+        user=request.user,
+        restaurant=restaurant,
+        stars=stars
+    )
+    new_fb.save()
+    response = {
+        "status": 200,
+        "data": {
+            "username": request.user.username,
+            "feedback": feedback,
+            "date": datetime.now().strftime("%d %b %Y"),
+            "stars": int(stars) if stars != 0 else 0
+        }
+    }
+    print(response)
+    return JsonResponse(response)
 
 def user_profile(request, username):
     return render(request, 'profile.html')

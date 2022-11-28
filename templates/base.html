@@ -12,7 +12,8 @@
 
         <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"/>
     </head>
     <body>
         <nav class="navbar navbar-expand-lg bg-light">
@@ -37,7 +38,7 @@
         <div id="root" class="container pt-5">
             {% block content %}{% endblock content %}
         </div>
-        <script src="../static/App.jsx"></script>
+        <!-- <script src="../static/App.jsx"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"></script>

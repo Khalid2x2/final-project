@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 class Restaurant(models.Model):
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=600)
+
+    def as_dict(self):
+        return dict(
+            name=self.name,
+            address=self.address,
+        )
     
     def __str__(self) -> str:
         return self.name

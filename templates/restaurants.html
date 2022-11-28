@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <h1 class="page-title">Restaurants</h1>
@@ -7,39 +8,79 @@
 </div>
 <div class="restaurants-container mt-4 mb-5">
     {% for restaurant in restaurants %}
-    <div class="restaurant mt-3">
-        <h4 class="restaurant__name">{{ restaurant.name }}</h4>
-        <p class="restaurant__address">{{ restaurant.address }}</p>
+    <div id="{{ restaurant.id }}" class="restaurant card mt-3 p-4 w-50">
+        <img class="img-fluid" src="#" alt="{{ restaurant.name }}">
+        <div class="card-body mt-3 p-0">
+            <h4 class="restaurant__name card-title">{{ restaurant.name }}</h4>
+            <p class="restaurant__address card-text">{{ restaurant.address }}</p>
+            <p>stars 3.5 (2 reviews)</p>
+            <div class="">
+                {% if user.is_active %}
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showFeedback(this)">Feedback</button>
+                    <button type="button" class="btn btn-primary btn-sm" target-id="{{ restaurant.id }}" onclick="editRestaurant(this)" data-bs-toggle="modal" data-bs-target="#editRestaurant">Edit</button>
+                    <a class="btn btn-danger btn-sm" href="{% url 'delete-restaurant' restaurant.id %}">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="mt-3">
+            <div class="feedbacks">
+                <h5 class="p-2 mb-0">Feedback</h5>
+                <div class="feedback-control">
+                    <div id="add-feedback" class="px-2 pb-2" style="display: block;">
+                        <div class="stars mb-1" value="0">
+                            <span class="m-0 p-0" value="1" onclick="showStars(this)"><i class="fa-regular fa-star"></i></span>
+                            <span class="m-0 p-0" value="2" onclick="showStars(this)"><i class="fa-regular fa-star"></i></span>
+                            <span class="m-0 p-0" value="3" onclick="showStars(this)"><i class="fa-regular fa-star"></i></span>
+                            <span class="m-0 p-0" value="4" onclick="showStars(this)"><i class="fa-regular fa-star"></i></span>
+                            <span class="m-0 p-0" value="5" onclick="showStars(this)"><i class="fa-regular fa-star"></i></span>
+                        </div>
+                        <div class="feedback-input d-flex">
+                            <input class="form-control form-control-sm me-1" id="feedbackInput" type="text">
+                            <button class="btn btn-primary btn-sm" type="button" onclick="printFeedback(this)">Submit</button>
+                        </div>
+                    </input>
+                </div>
+                <div class="feedback-containers">
+                    {% for feedback in restaurant.feedback_set.all %}
+                    <div class="feedback__comment small p-2">
+                        <hr class="mt-0 mb-1">
+                        <p class="m-0">
+                            <span><strong>{{ feedback.user.username }}</strong></span>
+                            <span>{{ feedback.created|date:'d M Y' }}</span>
+                        </p>
+                        <p class="m-0">{{feedback.feedback}}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
     </div>
     {% endfor %}
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="addNewRestaurant" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
-    <form action="{% url 'restaurants' %}" method="post">
-        {% csrf_token %}
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="ModalLabel">Add New Restaurant</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <label for="restaurant-name">Name</label>
-                        <input name="restaurant-name" type="text" class="form-control">
-                    </div>
-                    <div>
-                        <label for="restaurant-address">Address</label>
-                        <input name="restaurant-address" type="text" class="form-control">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
+<!-- Modals -->
+{% csrf_token %}
+{% include 'components/modal-add-restaurant.html' %}
+{% include 'components/modal-edit-restaurant.html' %}
 {% endblock content %}
+
+{% block script %}
+<script src="{% static 'js/feedback.js' %}"></script>
+<script>
+    function editRestaurant(item){
+        let id = item.getAttribute("target-id");
+        let parent = document.getElementById(id);
+        let name = parent.querySelector(".restaurant__name").innerText;
+        let address = parent.querySelector(".restaurant__address").innerText;
+        fillEditModal(id,name,address)
+    }
+    function fillEditModal(id,name,address){
+        let edit_modal = document.getElementById("editRestaurant");
+        let form = edit_modal.querySelector("form");
+        form.setAttribute("action","/"+id+"/edit/");
+        form.querySelector("#restaurant-name").setAttribute("value",name);
+        form.querySelector("#restaurant-address").setAttribute("value",address);
+    }
+</script>
+{% endblock script %}
+    

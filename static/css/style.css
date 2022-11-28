@@ -6,3 +6,10 @@
     width: 200px;
     height: 150px;
 }
+.feedbacks {
+    background-color: #FAF7F0;
+}
+.stars {
+    color: gold;
+    cursor: pointer;
+}
