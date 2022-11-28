@@ -1,6 +1,31 @@
+/* Body */
+body {
+    min-height: 90vh;
+    background-image: url('/static/images/jason-leung-poI7DelFiVA-unsplash.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+.home__title {
+    color: white;
+    background-color: rgba(13, 109, 253, 0.6);
+}
+
+/* Navbar */
+
+/* Login & Register */
 .jumbotron {
     width: 310px;
+    background-color: #f0f8ffb3;
 }
+.login-icon {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.login-icon img {
+    width: 90px;
+}
+
 .restaurant img {
     border: 1px solid gray;
     width: 200px;
@@ -12,4 +37,12 @@
 .stars {
     color: gold;
     cursor: pointer;
+}
+
+/* Profile */
+.profile {
+    font-size: 20px;
+}
+.profile tr td:nth-child(2) {
+    width: 20px;
 }

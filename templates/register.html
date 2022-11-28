@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
 
 {% for message in messages %}
@@ -10,8 +12,11 @@
 </div>
 {% endfor %}
     
-<div class="jumbotron mx-auto rounded-2 p-2" style="background-color: #f0f8ff">
-    <h1 style="font-variant: small-caps">Register</h1>
+<div class="jumbotron mx-auto rounded-4 p-3">
+	<div class="login-icon">
+		<img src="{% static 'images/menu.png' %}" alt="Menu Icon" />
+	</div>
+    <h1 class="text-center" style="font-variant: small-caps">Register</h1>
     <form action="{% url 'register' %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
@@ -30,7 +35,7 @@
             <label style="font-size: 20px" class="font-italic">Password</label>
             <input type="password" name="password" class="form-control" value="{{request.form.password}}" />
         </div>
-        <button type="submit" class="btn btn-primary mt-2 w-100">Register</button>
+        <button type="submit" class="btn btn-primary mt-3 w-100">Register</button>
     </form>
 </div>
 {% endblock content %}

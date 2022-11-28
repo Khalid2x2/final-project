@@ -1,23 +1,82 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container rounded-3 p-5" style=" background-color: #becde5;">
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Name</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{ user.first_name }} {{user.last_name}}</p>
-	<br>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Username</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;{{ user.username }}</p>
-	<br>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Profession</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;Owner</p>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Profession</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;Receptionist</p>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Profession</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;Trainer</p>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Profession</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;Member</p>
-	<br>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Phone</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;phone</p>
-	<br>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">Street</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;street</p>
-	<br>
-	<p style="font-size: 25px"><strong style="font-variant: small-caps;">City</strong>&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;city</p>
-	<br>
+<div class="profile bg-light rounded-4 p-5">
+	<form action="{% url 'user-profile' user.username %}" method="post">
+		{% csrf_token %}
+		<table>
+			<tbody>
+				<tr>
+					<td>Full Name</td>
+					<td>:</td>
+					<td>{{ user.first_name }} {{ user.last_name }}</td>
+				</tr>
+				<tr>
+					<td>Username</td>
+					<td>:</td>
+					<td>{{ user.username }}</td>
+				</tr>
+				<tr>
+					<td>Email</td>
+					<td>:</td>
+					<td>{{ user.email }}</td>
+				</tr>
+				<tr>
+					<td>Profession</td>
+					<td>:</td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="mt-3 d-flex">
+			<button type="button" class="btn btn-primary me-2" onclick="edit(this)">Edit</button>
+			<button id="save-btn" type="submit" class="btn btn-primary" style="display: none;">Save</button>
+		</div>
+	</form>
 </div>
 {% endblock content %}
-	
-	
+
+{% block script %}
+<script>
+	function edit(element){
+
+		// disable edit button
+		element.setAttribute("disabled","");
+
+		// show save button
+		let save_btn = document.getElementById("save-btn");
+		save_btn.style.display = "block";
+
+		let inputNames = [
+			"user-fullname",
+			"user-name",
+			"user-email"
+		]
+
+		let rows = document.querySelectorAll(".profile tr td:nth-child(3)");
+		rows.forEach((item,i) => {
+			if(i==0 | i==1 | i==2){
+				item.innerHTML = `<input name=${inputNames[i]} class="form-control" type=text value="${item.innerText}" />`;
+			} else if (i==3){
+				item.innerHTML = `
+					<select class="form-control" name="user-profession" id="user-profession">
+						<option ${selectionValidation(item.innerText,"")} value="null"></option>
+						<option ${selectionValidation(item.innerText,"Owner")} value="owner">Owner</option>
+						<option ${selectionValidation(item.innerText,"Trainer")} value="trainer">Trainer</option>
+						<option ${selectionValidation(item.innerText,"Member")} value="member">Member</option>
+						<option ${selectionValidation(item.innerText,"Receptionist")} value="receptionist">Receptionist</option>
+					</select>
+				`;
+			};
+		});
+	}
+
+	function selectionValidation(value,premis){
+		if(value==premis){
+			return "selected"
+		} else {
+			return ""
+		}
+	}
+</script>
+{% endblock script %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
@@ -8,12 +9,14 @@ from datetime import datetime
 
 from .models import Restaurant, Feedback
 
+@login_required(login_url="login/")
 def index(request):
     context = {
         'home_page': True
     }
     return render(request, 'home.html', context)
 
+@login_required(login_url="login/")
 def restaurants(request):
     context = {
         'title': 'Restaurants',
@@ -64,10 +67,38 @@ def feedback(request,pk):
             "stars": int(stars) if stars != 0 else 0
         }
     }
-    print(response)
     return JsonResponse(response)
 
 def user_profile(request, username):
+    def fn_as_sn(name):
+        ''' fullname as first and last name '''
+        if name:
+            names = name.split(" ")
+            if len(names) == 0:
+                return "", ""
+            elif len(names) == 1:
+                return names[0], ""
+            else:
+                return names[0], " ".join(names[1:])
+        else:
+            return "", ""
+
+    if request.method == "POST":
+
+        # get post requests form data
+        fullname = request.POST.get("user-fullname")
+        username = request.POST.get("user-name")
+        email = request.POST.get("user-email")
+        # profession =
+
+        # set post request data to user object
+        first_name, last_name = fn_as_sn(fullname)
+        request.user.first_name = first_name
+        request.user.last_name = last_name
+        request.user.username = username
+        request.user.email = email
+        request.user.save()
+
     return render(request, 'profile.html')
 
 def user_register(request):
