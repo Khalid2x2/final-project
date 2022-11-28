@@ -1,0 +1,8 @@
+.jumbotron {
+    width: 310px;
+}
+.restaurant img {
+    border: 1px solid gray;
+    width: 200px;
+    height: 150px;
+}
