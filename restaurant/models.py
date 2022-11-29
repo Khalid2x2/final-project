@@ -4,13 +4,8 @@ from django.contrib.auth.models import User
 class Restaurant(models.Model):
     name = models.CharField(max_length=256)
     address = models.CharField(max_length=600)
+    url = models.CharField(max_length=788,unique=True)
 
-    def as_dict(self):
-        return dict(
-            name=self.name,
-            address=self.address,
-        )
-    
     def __str__(self) -> str:
         return self.name
 
@@ -23,3 +18,15 @@ class Feedback(models.Model):
 
     def __str__(self):
         return self.feedback
+
+class UserFavorite(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+
+    def __str__(self):
+        title = [
+            self.user.username,
+            self.restaurant.name
+        ]
+        return " ".join(title)
