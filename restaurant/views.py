@@ -5,6 +5,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import JsonResponse
 
+from decouple import config
+import requests
+
 from datetime import datetime
 
 from .models import Restaurant, Feedback
@@ -16,36 +19,68 @@ def index(request):
     }
     return render(request, 'home.html', context)
 
-@login_required(login_url="login/")
+# @login_required(login_url="login/")
+# def restaurants(request):
+#     context = {
+#         'title': 'Restaurants',
+#         'restaurants_page': True,
+#     }
+#     if request.method == "GET":
+#         restaurants = Restaurant.objects.all()
+#         context['restaurants'] = restaurants
+#         return render(request, 'restaurants.html', context)
+#     elif request.method == "POST":
+#         new_restaurant = Restaurant.objects.create(
+#             name=request.POST.get("restaurant-name"),
+#             address=request.POST.get("restaurant-address"),
+#         )
+#         new_restaurant.save()
+#         return redirect('restaurants')
+
+# def edit_restaurant(request,pk):
+#     if request.method == "POST":
+#         restaurant = Restaurant.objects.get(id=pk)
+#         restaurant.name = request.POST.get("restaurant-name")
+#         restaurant.address = request.POST.get("restaurant-address")
+#         restaurant.save()
+#         return redirect("restaurants")
+
+# def delete_restaurant(request,pk):
+#     restaurant = Restaurant.objects.get(id=pk)
+#     restaurant.delete()
+#     return redirect("restaurants")
+
+# Restaurants Views
 def restaurants(request):
     context = {
-        'title': 'Restaurants',
-        'restaurants_page': True,
+        "title": "Restaurants Page"
     }
-    if request.method == "GET":
-        restaurants = Restaurant.objects.all()
-        context['restaurants'] = restaurants
-        return render(request, 'restaurants.html', context)
-    elif request.method == "POST":
-        new_restaurant = Restaurant.objects.create(
-            name=request.POST.get("restaurant-name"),
-            address=request.POST.get("restaurant-address"),
-        )
-        new_restaurant.save()
-        return redirect('restaurants')
+    return render(request, 'restaurants.html', context)
 
-def edit_restaurant(request,pk):
-    if request.method == "POST":
-        restaurant = Restaurant.objects.get(id=pk)
-        restaurant.name = request.POST.get("restaurant-name")
-        restaurant.address = request.POST.get("restaurant-address")
-        restaurant.save()
-        return redirect("restaurants")
-
-def delete_restaurant(request,pk):
-    restaurant = Restaurant.objects.get(id=pk)
-    restaurant.delete()
-    return redirect("restaurants")
+# Yelp API implementation
+def search_restaurants(request):
+    endpoint = "https://api.yelp.com/v3/businesses/search"
+    headers = {
+        "Authorization": "Bearer " + config("YELP_KEY")
+    }
+    params = {
+        "location": request.POST.get("zipcode"),
+        "radius": request.POST.get("radius"),
+        "categories": "restaurants",
+        "limit": 3
+    }
+    res = requests.get(endpoint, headers=headers, params=params)
+    if res.status_code == 200:
+        return JsonResponse({
+            "status": 200,
+            "data": res.json().get("businesses")
+        })
+    else:
+        return JsonResponse({
+            "status": -1,
+            "data": {}
+        })
+    
 
 def feedback(request,pk):
     restaurant = Restaurant.objects.get(id=pk)
