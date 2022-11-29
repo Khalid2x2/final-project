@@ -3,16 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import JsonResponse
 
-from decouple import config
-import requests
-
-from datetime import datetime
-
-from .models import Restaurant, Feedback
-
-@login_required(login_url="login/")
+@login_required()
 def index(request):
     context = {
         'home_page': True
@@ -37,73 +29,13 @@ def index(request):
 #         new_restaurant.save()
 #         return redirect('restaurants')
 
-# def edit_restaurant(request,pk):
-#     if request.method == "POST":
-#         restaurant = Restaurant.objects.get(id=pk)
-#         restaurant.name = request.POST.get("restaurant-name")
-#         restaurant.address = request.POST.get("restaurant-address")
-#         restaurant.save()
-#         return redirect("restaurants")
-
-# def delete_restaurant(request,pk):
-#     restaurant = Restaurant.objects.get(id=pk)
-#     restaurant.delete()
-#     return redirect("restaurants")
-
 # Restaurants Views
-@login_required(login_url="login/")
+@login_required()
 def restaurants(request):
     context = {
         "title": "Restaurants Page"
     }
     return render(request, 'restaurants.html', context)
-
-# Yelp API implementation
-def search_restaurants(request):
-    endpoint = "https://api.yelp.com/v3/businesses/search"
-    headers = {
-        "Authorization": "Bearer " + config("YELP_KEY")
-    }
-    params = {
-        "location": request.POST.get("zipcode"),
-        "radius": request.POST.get("radius"),
-        "categories": "restaurants",
-        # "limit": 6
-    }
-    res = requests.get(endpoint, headers=headers, params=params)
-    if res.status_code == 200:
-        return JsonResponse({
-            "status": 200,
-            "data": res.json().get("businesses")
-        })
-    else:
-        return JsonResponse({
-            "status": -1,
-            "data": {}
-        })
-    
-
-def feedback(request,pk):
-    restaurant = Restaurant.objects.get(id=pk)
-    feedback = request.POST.get("feedback","")
-    stars = request.POST.get("stars",0)
-    new_fb = Feedback.objects.create(
-        feedback=feedback,
-        user=request.user,
-        restaurant=restaurant,
-        stars=stars
-    )
-    new_fb.save()
-    response = {
-        "status": 200,
-        "data": {
-            "username": request.user.username,
-            "feedback": feedback,
-            "date": datetime.now().strftime("%d %b %Y"),
-            "stars": int(stars) if stars != 0 else 0
-        }
-    }
-    return JsonResponse(response)
 
 def user_profile(request, username):
     def fn_as_sn(name):

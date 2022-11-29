@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import api
 
 urlpatterns = [
     path('', views.index, name='home'),
@@ -9,7 +10,7 @@ urlpatterns = [
     path('profile/<str:username>/', views.user_profile, name='user-profile'),
 
     path('restaurants/', views.restaurants, name='restaurants'),
-    path('search-restaurants/', views.search_restaurants),
+    path('search-restaurants/', api.search_restaurants),
 
-    path('<int:pk>/feedback/', views.feedback, name="feedback")
+    # path('<int:pk>/feedback/', views.feedback, name="feedback")
 ]
