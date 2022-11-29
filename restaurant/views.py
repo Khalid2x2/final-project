@@ -51,6 +51,7 @@ def index(request):
 #     return redirect("restaurants")
 
 # Restaurants Views
+@login_required(login_url="login/")
 def restaurants(request):
     context = {
         "title": "Restaurants Page"
@@ -67,7 +68,7 @@ def search_restaurants(request):
         "location": request.POST.get("zipcode"),
         "radius": request.POST.get("radius"),
         "categories": "restaurants",
-        "limit": 3
+        # "limit": 6
     }
     res = requests.get(endpoint, headers=headers, params=params)
     if res.status_code == 200:

@@ -1,22 +1,17 @@
 function getRestaurants() {
-    // get zipcode and radius value
+
+    // Get zipcode and radius value
     var zipcode = document.getElementById("zipcode").value;
     var radius = document.getElementById("radius").value;
     if (zipcode) {
-        alert("Good!");
-        // fillResults(zipcode, radius);
+        getYelp(zipcode,radius);
     } else {
-        alert("zipcode can not be empty");
+        alert("zipcode can not be empty!");
     }
 
-    // Make get request to Yelp API
-    // function fillResults(zipcode,radius){
-    //     const root = document.getElementById("results");
-    //     root.innerHTML = `<p class="text-light">Zip Code: ${zipcode}, Radius: ${radius} M</p>`
-    // }
 }
 
-function loadingSpinner(){
+function Spinner(){
     let root = document.getElementById("results");
     root.innerHTML = `
         <div class="spinner-border text-primary" role="status">
@@ -26,18 +21,39 @@ function loadingSpinner(){
 }
 
 function fillResults(businesses){
+    let search_result = document.getElementById("search-result");
     let root = document.getElementById("results");
     root.innerHTML = "";
-    businesses.forEach((business) => {
-        let item = `<p><a class="text-decoraion-none" href=${business['url']}>${business['name']}</a></p>`
-        root.insertAdjacentHTML("beforeEnd", item);
-    })
+    if(businesses.length > 0){
+        search_result.innerHTML = `<p class="text-light mt-3">${businesses.length} Restaurants found</p>`
+        businesses.forEach((b) => {
+            let loc = b['location'];
+            let address = `${loc['address1']}, ${loc['city']}, ${loc['state']}, ${loc['country']} ${loc['zip_code']}`;
+            let rating = b['rating'];
+            let reviews = b['review_count'];
+            let item = `
+                <div class="card mt-3 me-3" style="width: 18rem;">
+                    <img class="card-img-top" src="${b['image_url']}" alt="${b['name']}">
+                    <div class="card-body">
+                        <h5 class="card-title"><a class="text-dark text-decoration-none" href="${b['url']}" target="_blank">${b['name']}</a></h5>
+                        <p class="card-text small mb-0">Rating: ${rating} stars (${reviews.toLocaleString()})</p>
+                        <p class="card-text small">${address}</p>
+                    </div>
+                </div>
+            `
+            root.insertAdjacentHTML("beforeEnd", item);
+        })
+    } else {
+        search_result.innerHTML = `<p class="text-light mt-3">No Restaurants within that radius.</p>`
+    }
 }
 
-function getYelp() {
+function getYelp(zipcode,radius) {
 
-    loadingSpinner();
+    // Show the spinner after button pressed
+    Spinner();
     
+    // Prepare the endpoint and csrf token
     let url = "http://localhost:8000/search-restaurants/";
     let csrf = document.querySelector("input[name=csrfmiddlewaretoken]").value;
 
@@ -50,14 +66,12 @@ function getYelp() {
     http.setRequestHeader("Access-Control-Max-Age", "1728000");
     http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
-            // Output as search results
             let response = JSON.parse(http.responseText);
             fillResults(response['data']);
         }
     };
     let formdata = new FormData();
-    formdata.append("zipcode",10118);
-    formdata.append("radius",8024);
+    formdata.append("zipcode",zipcode);
+    formdata.append("radius",radius);
     http.send(formdata);
 }
-// getYelp();
