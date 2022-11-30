@@ -205,7 +205,7 @@ function restaurantOpenSchedule(hours) {
         6: "Sunday",
     };
     for (let i in hours) {
-        let day = days[i];
+        let day = days[hours[i]["day"]];
         let start = hours[i]["start"].InsertAt(":", 2);
         let close = hours[i]["end"].InsertAt(":", 2);
         let row = `
