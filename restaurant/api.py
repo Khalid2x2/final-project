@@ -27,7 +27,13 @@ def search_restaurants(request):
             "status": -1,
             "data": {}
         })
-    
+def restaurant_detail(request,id):
+    ''' Yelp Business Detail API Call '''
+
+    headers = {"Authorization": "Bearer " + config("YELP_KEY")}
+    data = requests.get("https://api.yelp.com/v3/businesses/"+id, headers=headers)
+    return JsonResponse(data.json())
+
 # def feedback(request,pk):
 #     restaurant = Restaurant.objects.get(id=pk)
 #     feedback = request.POST.get("feedback","")

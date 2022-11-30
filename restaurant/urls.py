@@ -9,6 +9,8 @@ urlpatterns = [
     path('register/', views.user_register, name='register'),
     path('profile/<str:username>/', views.user_profile, name='user-profile'),
 
+    path('restaurant/<str:id>', views.restaurant_detail, name='restaurant'),
+    path('restaurant/yelp/<str:id>', api.restaurant_detail, name='yelp-restaurant'),
     path('restaurants/', views.restaurants, name='restaurants'),
     path('search-restaurants/', api.search_restaurants),
 

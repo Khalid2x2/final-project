@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from . import api
+
 @login_required()
 def index(request):
     context = {
@@ -37,6 +39,11 @@ def restaurants(request):
     }
     return render(request, 'restaurants.html', context)
 
+def restaurant_detail(request,id):
+    context = {"restaurant_id": id}
+    return render(request, "restaurant_detail_view.html", context)
+
+# User views
 def user_profile(request, username):
     def fn_as_sn(name):
         ''' fullname as first and last name '''

@@ -22,8 +22,12 @@ function fillResults(businesses) {
                 <div class="card mt-3 me-3" style="width: 18rem;">
                     <img class="card-img-top" src="${b["image_url"]}" alt="${b["name"]}">
                     <div class="card-body">
-                        <h5 class="card-title"><a class="text-dark text-decoration-none" href="${b["url"]}" target="_blank">${b["name"]}</a></h5>
-                        <p class="card-text small mb-0">Rating: ${rating} stars (${reviews.toLocaleString()})</p>
+                        <h5 class="card-title"><a class="text-dark text-decoration-none" href="/restaurant/${b["id"]}" target="_blank">${b["name"]}</a></h5>
+                        <p class="card-text small mb-0">
+                            <span>Rating: </span>
+                            <span>${rating} stars</span>
+                            <span>(${reviews.toLocaleString()} reviews)</span>
+                        </p>
                         <p class="card-text small">${address}</p>
                     </div>
                 </div>
@@ -59,11 +63,12 @@ function getYelp(zipcode, radius) {
             }
 
             let response = JSON.parse(http.responseText);
-            let restaurants = response['data']['businesses'];
-            fillResults(restaurants);
-
-            let center = response["data"]["region"]["center"];
-            initMap(center,restaurants);
+            let restaurants = response["data"]["businesses"];
+            if(restaurants.length > 0) {
+                let center = response["data"]["region"]["center"];
+                fillResults(restaurants);
+                initMap(center, restaurants);
+            }
         }
     };
     let formdata = new FormData();
