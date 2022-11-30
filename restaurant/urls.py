@@ -15,5 +15,7 @@ urlpatterns = [
     path('restaurants/', views.restaurants, name='restaurants'),
     path('search-restaurants/', api.search_restaurants),
 
+    path('google-restaurants/', api.google_restaurants),
+
     # path('<int:pk>/feedback/', views.feedback, name="feedback")
 ]

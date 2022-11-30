@@ -85,6 +85,7 @@ function turnIntoReview(props) {
                     </p>
                     <p class="rating-stars m-0">
                         ${stars_span}
+                        <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
                     </p>
                 </div>
             </div>
@@ -94,44 +95,77 @@ function turnIntoReview(props) {
         </div>`;
     user_review.innerHTML = review_tag;
 }
-const review_submit = document.getElementById("review-btn");
-review_submit.addEventListener("click", () => {
-    // get csrftoken
-    let csrf = getCSRF();
+function editBtn(element) {
+    let container = element.closest(".reviews");
+    container.innerHTML = `
+            <div class="review rounded border m-3 p-3">
+                <div>
+                    <h6>Leave Your Review</h6>
+                    <div class="align-self-center">
+                        <p id="rating-stars" class="rating-stars m-0" value="0">
+                            <strong>Ratings:</strong>
+                            <span><i class="fa-regular fa-star"></i></span>
+                            <span><i class="fa-regular fa-star"></i></span>
+                            <span><i class="fa-regular fa-star"></i></span>
+                            <span><i class="fa-regular fa-star"></i></span>
+                            <span><i class="fa-regular fa-star"></i></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-2 d-flex flex-column">
+                    <textarea id="user-review" class="form-control w-100 m-0"></textarea>
+                    <button id="review-btn" class="btn btn-primary mt-2" type="button">Submit</button>
+                </div>
+            </div>`;
+    element.closest(".review").remove();
+    ratingStarsListener();
+    reviewSubmitListener();
+}
+function reviewSubmitListener() {
+    const review_submit = document.getElementById("review-btn");
+    review_submit.addEventListener("click", () => {
+        // get csrftoken
+        let csrf = getCSRF();
 
-    // get the review data
-    let stars = document.getElementById("rating-stars").getAttribute("value");
-    let review = document.getElementById("user-review").value;
-    let props = {
-        name: "Full Name",
-        date: "12 Nov 2022",
-        review: review,
-        stars: stars,
-    };
-    turnIntoReview(props);
+        // get the review data
+        let stars = document.getElementById("rating-stars").getAttribute("value");
+        let review = document.getElementById("user-review").value;
+        let props = {
+            name: "Full Name",
+            date: "12 Nov 2022",
+            review: review,
+            stars: stars,
+        };
+        turnIntoReview(props);
 
-    // prepare the form variable
-    let formdata = new FormData();
-    formdata.append("review", review);
-    formdata.append("stars", stars);
-});
-const feedback_stars = document.getElementById("rating-stars");
-const stars = feedback_stars.querySelectorAll(".fa-star");
-stars.forEach((star, i) => {
-    star.addEventListener("click", () => {
-        // set stars value
-        feedback_stars.setAttribute("value", i + 1);
-
-        // change the previous and the clicked stars to solid
-        for (let j = 0; j < stars.length; j++) {
-            if (j <= i) {
-                stars[j].classList.replace("fa-regular", "fa-solid");
-            } else {
-                stars[j].classList.replace("fa-solid", "fa-regular");
-            }
-        }
+        // prepare the form variable
+        let formdata = new FormData();
+        formdata.append("review", review);
+        formdata.append("stars", stars);
     });
-});
+}
+reviewSubmitListener();
+
+function ratingStarsListener() {
+    const feedback_stars = document.getElementById("rating-stars");
+    const stars = feedback_stars.querySelectorAll(".fa-star");
+    stars.forEach((star, i) => {
+        star.addEventListener("click", () => {
+            // set stars value
+            feedback_stars.setAttribute("value", i + 1);
+
+            // change the previous and the clicked stars to solid
+            for (let j = 0; j < stars.length; j++) {
+                if (j <= i) {
+                    stars[j].classList.replace("fa-regular", "fa-solid");
+                } else {
+                    stars[j].classList.replace("fa-solid", "fa-regular");
+                }
+            }
+        });
+    });
+}
+ratingStarsListener();
 
 // Get Yelp Business Detail
 function restaurantDetail(props) {
@@ -206,7 +240,9 @@ function restaurantRatings(element, stars, review_count) {
         element.insertAdjacentHTML("beforeEnd", star);
     }
     element.insertAdjacentHTML("beforeEnd", ` <span>${stars}</span>`);
-    element.insertAdjacentHTML("beforeEnd", ` <span>(${review_count} reviews)</span>`);
+    if (review_count) {
+        element.insertAdjacentHTML("beforeEnd", ` <span>(${review_count} reviews)</span>`);
+    }
 }
 function getRestaurantsDetail() {
     let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
@@ -219,6 +255,9 @@ function getRestaurantsDetail() {
         if (http.readyState == 4 && http.status == 200) {
             let response = JSON.parse(http.responseText);
             restaurantDetail(response);
+
+            // make a call to google maps place api
+            getGoogleReviews(response.name);
         }
     };
     http.send();
@@ -228,21 +267,7 @@ getRestaurantsDetail();
 
 // Yelp Business Reviews
 function restaurantsReviews(reviews) {
-    let months = {
-        0: "Jan",
-        1: "Feb",
-        2: "Mar",
-        3: "Apr",
-        4: "May",
-        5: "Jun",
-        6: "Jul",
-        7: "Aug",
-        8: "Sep",
-        9: "Oct",
-        10: "Nov",
-        11: "Dec",
-    }
-    for (let i = reviews.length-1; i >= 0; i--) {
+    for (let i = reviews.length - 1; i >= 0; i--) {
         let review = reviews[i];
         let created_date = new Date(review["time_created"]);
         let username = review["user"]["name"];
@@ -263,7 +288,6 @@ function restaurantsReviews(reviews) {
                                 <span><i class="fa-solid fa-star"></i></span>
                                 <span><i class="fa-solid fa-star"></i></span>
                                 <span><i class="fa-solid fa-star"></i></span>
-                                <span>${review["user"]["rating"]} stars</span>
                             </p>
                         </div>
                     </div>

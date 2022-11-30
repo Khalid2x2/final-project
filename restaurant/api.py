@@ -42,6 +42,25 @@ def restaurant_reviews(request,id):
     data = requests.get("https://api.yelp.com/v3/businesses/"+id+"/reviews", headers=headers)
     return JsonResponse(data.json())
 
+def google_restaurants(request):
+    ''' Google Place API call for getting place_id based on place_name '''
+
+    # get place_id based on place_name
+    params = {
+        "fields": "place_id",
+        "input": request.GET.get("q"),
+        "inputtype": "textquery",
+        "key": config("GOOGLE_MAPS_API")
+    }
+    candidate = requests.get("https://maps.googleapis.com/maps/api/place/findplacefromtext/json", params=params).json()
+
+    params = {
+        "place_id": candidate["candidates"][0]["place_id"],
+        "key": config("GOOGLE_MAPS_API")
+    }
+    data = requests.get("https://maps.googleapis.com/maps/api/place/details/json?fields=rating%2Creview%2Cwebsite", params=params)
+    return JsonResponse(data.json())
+
 # def feedback(request,pk):
 #     restaurant = Restaurant.objects.get(id=pk)
 #     feedback = request.POST.get("feedback","")

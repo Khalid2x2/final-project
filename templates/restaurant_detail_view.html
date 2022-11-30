@@ -29,6 +29,12 @@
                 <p id="restaurant__address2" class="mb-2">Country</p>
                 <p id="restaurant__phonenumber" class="mb-2">Phone Number</p>
                 <p class="my-0">
+                    <a id="restaurant__website" class="link-secondary text-decoration-none" target="_blank" href="#">
+                        <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                        <span>website</span>
+                    </a>
+                </p>
+                <p class="my-0">
                     <a id="restaurant__url" class="link-secondary text-decoration-none" target="_blank" href="#">
                         <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
                         <span>yelp</span>
@@ -46,15 +52,7 @@
                             </tr>
                             <tr>
                                 <td>Google</td>
-                                <td>
-                                    <span><i class="fa-solid fa-star"></i></span>
-                                    <span><i class="fa-solid fa-star"></i></span>
-                                    <span><i class="fa-solid fa-star"></i></span>
-                                    <span><i class="fa-solid fa-star"></i></span>
-                                    <span><i class="fa-solid fa-star"></i></span>
-                                    <span>5.0</span>
-                                    <span>(3 reviews)</span>
-                                </td>
+                                <td></td>
                             </tr>
                             <tr>
                                 <td>Favorite</td>
@@ -100,82 +98,12 @@
                         <h6 class="m-0 p-3">Google Review</h6>
                         <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
                     </div>
-                    <div class="reviews" style="display: none">
-                        <div class="review rounded border m-3 p-3">
-                            <div class="d-flex">
-                                <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="Reviewer name" />
-                                <div class="align-self-center ms-3">
-                                    <p class="m-0">
-                                        <span class="fw-bold">Full Name</span>
-                                        <span>11 Nov 2022</span>
-                                    </p>
-                                    <p class="rating-stars m-0">
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span>5.0</span>
-                                        <span>(3 reviews)</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <p class="m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error vitae provident vel dignissimos placeat assumenda nihil sint veritatis, sunt hic, animi commodi quis porro ratione?</p>
-                            </div>
-                        </div>
-                        <div class="review rounded border m-3 p-3">
-                            <div class="d-flex">
-                                <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="Reviewer name" />
-                                <div class="align-self-center ms-3">
-                                    <p class="m-0">
-                                        <span class="fw-bold">Full Name</span>
-                                        <span>11 Nov 2022</span>
-                                    </p>
-                                    <p class="rating-stars m-0">
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span>5.0</span>
-                                        <span>(3 reviews)</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <p class="m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error vitae provident vel dignissimos placeat assumenda nihil sint veritatis, sunt hic, animi commodi quis porro ratione?</p>
-                            </div>
-                        </div>
-                        <div class="review rounded border m-3 p-3">
-                            <div class="d-flex">
-                                <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="Reviewer name" />
-                                <div class="align-self-center ms-3">
-                                    <p class="m-0">
-                                        <span class="fw-bold">Full Name</span>
-                                        <span>11 Nov 2022</span>
-                                    </p>
-                                    <p class="rating-stars m-0">
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span>5.0</span>
-                                        <span>(3 reviews)</span>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="mt-2">
-                                <p class="m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error vitae provident vel dignissimos placeat assumenda nihil sint veritatis, sunt hic, animi commodi quis porro ratione?</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="reviews" style="display: none"></div>
                 </div>
                 <div class="reviews__user">
                     <div class="head d-flex justify-content-between" style="border-bottom: 0px">
                         <h6 class="m-0 p-3">User Review</h6>
-                        <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
+                        <button class="btn bg-transparent"><i class="fa-solid fa-angle-down"></i></button>
                     </div>
                     <div class="reviews" style="display: block">
                         <div class="review rounded border m-3 p-3">
@@ -206,5 +134,6 @@
 {% endblock content %} {% block script %}
 <script src="{% static 'js/restaurant-detail.js' %}"></script>
 <script src="{% static 'js/google-maps.js' %}"></script>
+<script src="{% static 'js/google-reviews.js' %}"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAaQsQbs8dpOS-rjDx_CVu-1wBbnwWXa3k&callback=placeMap" defer></script>
 {% endblock script %}
