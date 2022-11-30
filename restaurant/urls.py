@@ -11,6 +11,7 @@ urlpatterns = [
 
     path('restaurant/<str:id>', views.restaurant_detail, name='restaurant'),
     path('restaurant/yelp/<str:id>', api.restaurant_detail, name='yelp-restaurant'),
+    path('restaurant/yelp-reviews/<str:id>', api.restaurant_reviews, name='yelp-reviews'),
     path('restaurants/', views.restaurants, name='restaurants'),
     path('search-restaurants/', api.search_restaurants),
 

@@ -30,7 +30,6 @@ function titleBottomBorder(element) {
     } else {
         parent.style.borderBottom = "0px";
     }
-    console.log(parent);
 }
 
 const reviewsDropdown = document.querySelectorAll("#reviews .head button");
@@ -155,7 +154,7 @@ function restaurantDetail(props) {
     restaurantRatings(yelp_ratings, props.rating, props.review_count);
 
     // Google Maps
-    placeMap(props.name,props.coordinates.latitude,props.coordinates.longitude);
+    placeMap(props.name, props.coordinates.latitude, props.coordinates.longitude);
 }
 function restaurantOpenSchedule(hours) {
     let table = document.querySelector("#restaurant__schedule tbody");
@@ -201,7 +200,7 @@ function restaurantRatings(element, stars, review_count) {
     for (let i = 1; i < 6; i++) {
         let star = `
             <span>
-                <i class="${i <= stars ? "fa-solid fa-star" : (i-0.5) == stars ? "fa-solid fa-star-half-stroke" : "fa-regular fa-star"}">
+                <i class="${i <= stars ? "fa-solid fa-star" : i - 0.5 == stars ? "fa-solid fa-star-half-stroke" : "fa-regular fa-star"}">
             <span>
         `;
         element.insertAdjacentHTML("beforeEnd", star);
@@ -209,17 +208,87 @@ function restaurantRatings(element, stars, review_count) {
     element.insertAdjacentHTML("beforeEnd", ` <span>${stars}</span>`);
     element.insertAdjacentHTML("beforeEnd", ` <span>(${review_count} reviews)</span>`);
 }
-let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
-let http = new XMLHttpRequest();
-http.open("GET", "http://localhost:8000/restaurant/yelp/" + restaurant_id, true);
-http.setRequestHeader("Access-Control-Allow-Origin", "*");
-http.setRequestHeader("Access-Control-Allow-Methods", "GET");
-http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
-http.onreadystatechange = function () {
-    if (http.readyState == 4 && http.status == 200) {
-        let response = JSON.parse(http.responseText);
-        console.log(response);
-        restaurantDetail(response);
+function getRestaurantsDetail() {
+    let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
+    let http = new XMLHttpRequest();
+    http.open("GET", "http://localhost:8000/restaurant/yelp/" + restaurant_id, true);
+    http.setRequestHeader("Access-Control-Allow-Origin", "*");
+    http.setRequestHeader("Access-Control-Allow-Methods", "GET");
+    http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            let response = JSON.parse(http.responseText);
+            restaurantDetail(response);
+        }
+    };
+    http.send();
+}
+
+getRestaurantsDetail();
+
+// Yelp Business Reviews
+function restaurantsReviews(reviews) {
+    let months = {
+        0: "Jan",
+        1: "Feb",
+        2: "Mar",
+        3: "Apr",
+        4: "May",
+        5: "Jun",
+        6: "Jul",
+        7: "Aug",
+        8: "Sep",
+        9: "Oct",
+        10: "Nov",
+        11: "Dec",
     }
-};
-http.send();
+    for (let i = reviews.length-1; i >= 0; i--) {
+        let review = reviews[i];
+        let created_date = new Date(review["time_created"]);
+        let username = review["user"]["name"];
+        let profile_url = review["user"]["profile_url"];
+        let reviews_container = document.querySelector(".reviews__yelp .reviews");
+        let review_tag = `
+                <div class="review rounded border m-3 p-3">
+                    <div class="d-flex">
+                        <img class="border border-secondary" src="${review["user"]["image_url"]}" alt="avatar of ${username}" />
+                        <div class="align-self-center ms-3">
+                            <p class="m-0">
+                                <span class="fw-bold"><a class="text-dark text-decoration-none" href="${profile_url}">${username}</a></span>
+                                <span>${created_date.getDate()} ${months[created_date.getMonth()]} ${created_date.getFullYear()}</span>
+                            </p>
+                            <p class="rating-stars m-0">
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <span><i class="fa-solid fa-star"></i></span>
+                                <span>${review["user"]["rating"]} stars</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <p class="m-0">${review["text"]}</p>
+                    </div>
+                </div>`;
+        reviews_container.insertAdjacentHTML("beforeEnd", review_tag);
+    }
+}
+
+function getRestaurantReviews() {
+    let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
+    let http = new XMLHttpRequest();
+    http.open("GET", "http://localhost:8000/restaurant/yelp-reviews/" + restaurant_id, true);
+    http.setRequestHeader("Access-Control-Allow-Origin", "*");
+    http.setRequestHeader("Access-Control-Allow-Methods", "GET");
+    http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            let response = JSON.parse(http.responseText);
+            restaurantsReviews(response["reviews"]);
+        }
+    };
+    http.send();
+}
+
+getRestaurantReviews();

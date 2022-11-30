@@ -50,7 +50,7 @@ body {
 }
 
 /* Restaurants & Map */
-#map {
+#search-result + #map {
     width: 100%;
     height: 500px;
     border: 1px solid blue;
@@ -79,7 +79,6 @@ body {
 .restaurant #map {
     width: 100%;
     height: 300px;
-    border: 1px solid blue;
 }
 .rating-stars {
     cursor: pointer;
