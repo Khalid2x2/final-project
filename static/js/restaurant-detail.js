@@ -122,7 +122,7 @@ function turnIntoReview(props) {
                         <span class="fw-bold">${props.name}</span>
                         <span>${props.date}</span>
                     </p>
-                    <p class="rating-stars m-0">
+                    <p class="rating-stars m-0" value="${props.stars}">
                         ${stars_span}
                         <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
                     </p>
@@ -136,19 +136,17 @@ function turnIntoReview(props) {
 }
 function editBtn(element) {
     let container = element.closest(".reviews");
+    let stars = element.closest(".rating-stars").getAttribute("value");
+    let stars_span = createStars(parseInt(stars));
     let text = element.closest(".review").querySelector(".review__content").innerText;
     container.innerHTML = `
             <div class="review rounded border m-3 p-3">
                 <div>
                     <h6>Leave Your Review</h6>
                     <div class="align-self-center">
-                        <p id="rating-stars" class="rating-stars m-0" value="0">
+                        <p id="rating-stars" class="rating-stars m-0" value="${parseInt(stars)}">
                             <strong>Ratings:</strong>
-                            <span><i class="fa-regular fa-star"></i></span>
-                            <span><i class="fa-regular fa-star"></i></span>
-                            <span><i class="fa-regular fa-star"></i></span>
-                            <span><i class="fa-regular fa-star"></i></span>
-                            <span><i class="fa-regular fa-star"></i></span>
+                            ${stars_span}
                         </p>
                     </div>
                 </div>
@@ -161,7 +159,6 @@ function editBtn(element) {
     ratingStarsListener();
 }
 function reviewSubmitListener() {
-
     // open post request and send form data
     let http = new XMLHttpRequest();
     http.open("POST", "http://localhost:8000/user-review/", true);

@@ -120,12 +120,8 @@
                                         <span class="fw-bold"><a class="text-dark text-decoration-none" href="{% url 'user-profile' user.username %}">{{ user_fullname }}</a></span>
                                         <span>{{ user_review.created|date:'d M Y' }}</span>
                                     </p>
-                                    <p class="rating-stars m-0">
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
-                                        <span><i class="fa-solid fa-star"></i></span>
+                                    <p class="rating-stars m-0" value="{{ user_review.stars }}">
+                                        {{ stars|safe }}
                                         <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
                                     </p>
                                 </div>

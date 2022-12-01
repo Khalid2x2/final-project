@@ -24,6 +24,17 @@ def restaurants(request):
 
 @login_required()
 def restaurant_detail(request,id):
+
+    def span_stars(rating):
+        spans = []
+        for i in range(1,6):
+            if i <= rating:
+                spans.append('<span><i class="fa-solid fa-star"></i></span>')
+            else:
+                spans.append('<span><i class="fa-regular fa-star"></i></span>')
+        spans = "\n".join(spans)
+        return spans
+
     fullname = request.user.first_name + " " + request.user.last_name
     context = {
         "restaurant_id": id,
@@ -47,10 +58,10 @@ def restaurant_detail(request,id):
             restaurant=Restaurant.objects.get(restaurant_id=id),
         )
         context["user_review"] = review
+        context["stars"] = span_stars(review.stars)
     except ObjectDoesNotExist:
         context["user_review"] = None
 
-    print(context)
     return render(request, "restaurant_detail_view.html", context)
 
 # User views
