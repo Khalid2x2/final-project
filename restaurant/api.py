@@ -58,8 +58,9 @@ def google_restaurants(request):
         "place_id": candidate["candidates"][0]["place_id"],
         "key": config("GOOGLE_MAPS_API")
     }
-    data = requests.get("https://maps.googleapis.com/maps/api/place/details/json?fields=rating%2Creview%2Cwebsite", params=params)
-    return JsonResponse(data.json())
+    data = requests.get("https://maps.googleapis.com/maps/api/place/details/json?fields=rating%2Creview%2Cwebsite", params=params).json()
+    data['result']['reviews'] = sorted(data['result']['reviews'], key=lambda x: x['time'], reverse=True)
+    return JsonResponse(data)
 
 # def feedback(request,pk):
 #     restaurant = Restaurant.objects.get(id=pk)
