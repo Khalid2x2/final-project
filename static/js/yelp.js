@@ -56,18 +56,23 @@ function getYelp(zipcode, radius) {
     http.setRequestHeader("Access-Control-Max-Age", "1728000");
     http.onreadystatechange = function () {
         if (http.readyState == 4 && http.status == 200) {
-            var after_result = document.querySelector("#search-result + div").getAttribute("id");
-            if (after_result != "map") {
-                let result_div = document.getElementById("search-result");
-                result_div.insertAdjacentHTML("afterEnd", '<div id="map" class="mt-3"></div>');
-            }
-
             let response = JSON.parse(http.responseText);
-            let restaurants = response["data"]["businesses"];
-            if(restaurants.length > 0) {
-                let center = response["data"]["region"]["center"];
+            if (response.status == 200) {
+                // look for map div
+                var after_result = document.querySelector("#search-result + div").getAttribute("id");
+                if (after_result != "map") {
+                    let result_div = document.getElementById("search-result");
+                    result_div.insertAdjacentHTML("afterEnd", '<div id="map" class="mt-3"></div>');
+                }
+                // get retaurant data
+                let restaurants = response["data"]["businesses"];
                 fillResults(restaurants);
+                // draw the map
+                let center = response["data"]["region"]["center"];
                 initMap(center, restaurants);
+            } else {
+                document.getElementById("search-result").innerHTML = `<p class="text-light mt-3">No restaurants within the radius.</p>`; 
+                document.getElementById("results").innerHTML = "";
             }
         }
     };
