@@ -129,13 +129,14 @@ function turnIntoReview(props) {
                 </div>
             </div>
             <div class="mt-2">
-                <p class="m-0">${props.review}</p>
+                <p class="review__content m-0">${props.review}</p>
             </div>
         </div>`;
     user_review.innerHTML = review_tag;
 }
 function editBtn(element) {
     let container = element.closest(".reviews");
+    let text = element.closest(".review").querySelector(".review__content").innerText;
     container.innerHTML = `
             <div class="review rounded border m-3 p-3">
                 <div>
@@ -152,40 +153,61 @@ function editBtn(element) {
                     </div>
                 </div>
                 <div class="mt-2 d-flex flex-column">
-                    <textarea id="user-review" class="form-control w-100 m-0"></textarea>
-                    <button id="review-btn" class="btn btn-primary mt-2" type="button">Submit</button>
+                    <textarea id="user-review" class="form-control w-100 m-0">${text}</textarea>
+                    <button id="review-btn" class="btn btn-primary mt-2" type="button" onclick="reviewSubmitListener()">Submit</button>
                 </div>
             </div>`;
     element.closest(".review").remove();
     ratingStarsListener();
-    reviewSubmitListener();
 }
 function reviewSubmitListener() {
-    const review_submit = document.getElementById("review-btn");
-    review_submit.addEventListener("click", () => {
-        // get csrftoken
-        let csrf = getCSRF();
 
-        // get the review data
-        let stars = document.getElementById("rating-stars").getAttribute("value");
-        let review = document.getElementById("user-review").value;
-        let props = {
-            name: "Full Name",
-            date: "12 Nov 2022",
-            review: review,
-            stars: stars,
-        };
-        turnIntoReview(props);
+    // open post request and send form data
+    let http = new XMLHttpRequest();
+    http.open("POST", "http://localhost:8000/user-review/", true);
 
-        // prepare the form variable
-        let formdata = new FormData();
-        formdata.append("review", review);
-        formdata.append("stars", stars);
+    // set the request headers
+    http.setRequestHeader("X-CSRFToken", getCSRF());
+    http.setRequestHeader("Access-Control-Allow-Origin", "*");
+    http.setRequestHeader("Access-Control-Allow-Methods", "POST");
+    http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
+    http.setRequestHeader("Access-Control-Max-Age", "1728000");
 
-        console.log("review submission clicked");
-    });
+    // catch the response
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            let response = JSON.parse(http.responseText);
+            if (response.status == 200) {
+                let props = {
+                    name: response.fullName,
+                    date: response.reviewDate,
+                    review: review,
+                    stars: stars,
+                };
+                turnIntoReview(props);
+            } else {
+                alert("Network Connection Error");
+            }
+        }
+    };
+
+    // get the review data
+    let r_id = document.querySelector(".restaurant__title");
+    let restaurant_address = document.getElementById("restaurant__address1").innerText + " " + document.getElementById("restaurant__address2");
+    let stars = document.getElementById("rating-stars").getAttribute("value");
+    let review = document.getElementById("user-review").value;
+
+    // prepare the form variable
+    let formdata = new FormData();
+    formdata.append("review", review);
+    formdata.append("stars", stars);
+    formdata.append("restaurant_id", r_id.getAttribute("id"));
+    formdata.append("restaurant_name", r_id.innerText);
+    formdata.append("restaurant_address", restaurant_address);
+
+    // send the data
+    http.send(formdata);
 }
-reviewSubmitListener();
 
 function ratingStarsListener() {
     const feedback_stars = document.getElementById("rating-stars");

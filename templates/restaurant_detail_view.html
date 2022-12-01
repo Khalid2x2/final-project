@@ -110,6 +110,31 @@
                         <button class="btn bg-transparent"><i class="fa-solid fa-angle-down"></i></button>
                     </div>
                     <div class="reviews" style="display: block">
+
+                        {% if user_review %}
+                        <div class="review rounded border m-3 p-3">
+                            <div class="d-flex">
+                                <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="avatar of {{ user_fullname }}" />
+                                <div class="align-self-center ms-3">
+                                    <p class="m-0">
+                                        <span class="fw-bold"><a class="text-dark text-decoration-none" href="{% url 'user-profile' user.username %}">{{ user_fullname }}</a></span>
+                                        <span>{{ user_review.created|date:'d M Y' }}</span>
+                                    </p>
+                                    <p class="rating-stars m-0">
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        <span><i class="fa-solid fa-star"></i></span>
+                                        <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <p class="review__content m-0">{{ user_review.feedback.strip }}</p>
+                            </div>
+                        </div>
+                        {% else %}
                         <div class="review rounded border m-3 p-3">
                             <div>
                                 <h6>Leave Your Review</h6>
@@ -126,9 +151,11 @@
                             </div>
                             <div class="mt-2 d-flex flex-column">
                                 <textarea id="user-review" class="form-control w-100 m-0"></textarea>
-                                <button id="review-btn" class="btn btn-primary mt-2" type="button">Submit</button>
+                                <button id="review-btn" class="btn btn-primary mt-2" type="button" onclick="reviewSubmitListener()">Submit</button>
                             </div>
                         </div>
+                        {% endif %}
+                            
                     </div>
                 </div>
             </div>

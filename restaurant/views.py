@@ -4,7 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from .models import Restaurant, UserFavorite
+from .models import Restaurant, UserFavorite, Feedback
+from django.core.exceptions import ObjectDoesNotExist
 
 @login_required()
 def index(request):
@@ -12,24 +13,6 @@ def index(request):
         'home_page': True
     }
     return render(request, 'home.html', context)
-
-# @login_required(login_url="login/")
-# def restaurants(request):
-#     context = {
-#         'title': 'Restaurants',
-#         'restaurants_page': True,
-#     }
-#     if request.method == "GET":
-#         restaurants = Restaurant.objects.all()
-#         context['restaurants'] = restaurants
-#         return render(request, 'restaurants.html', context)
-#     elif request.method == "POST":
-#         new_restaurant = Restaurant.objects.create(
-#             name=request.POST.get("restaurant-name"),
-#             address=request.POST.get("restaurant-address"),
-#         )
-#         new_restaurant.save()
-#         return redirect('restaurants')
 
 # Restaurants Views
 @login_required()
@@ -41,17 +24,33 @@ def restaurants(request):
 
 @login_required()
 def restaurant_detail(request,id):
+    fullname = request.user.first_name + " " + request.user.last_name
     context = {
         "restaurant_id": id,
-        "user_like_it": False
+        "user_fullname": fullname.strip()
     }
+
+    ### get user liked
     try:
         fav = UserFavorite.objects.get(
             user=request.user,
             restaurant=Restaurant.objects.get(restaurant_id=id),
         )
         context["user_like_it"] = fav.liked
-    except: pass
+    except ObjectDoesNotExist:
+        context["user_like_it"] = False
+
+    ### get user review
+    try:
+        review = Feedback.objects.get(
+            user=request.user,
+            restaurant=Restaurant.objects.get(restaurant_id=id),
+        )
+        context["user_review"] = review
+    except ObjectDoesNotExist:
+        context["user_review"] = None
+
+    print(context)
     return render(request, "restaurant_detail_view.html", context)
 
 # User views

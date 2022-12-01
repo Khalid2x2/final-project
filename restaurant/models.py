@@ -18,7 +18,8 @@ class Feedback(models.Model):
     stars = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.feedback
+        user_fullname = self.user.first_name + " " + self.user.last_name
+        return f'{user_fullname} review on {self.restaurant.name}: "{self.feedback.strip()}"'
 
 class UserFavorite(models.Model):
     created = models.DateTimeField(auto_now_add=True)

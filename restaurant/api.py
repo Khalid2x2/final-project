@@ -5,6 +5,8 @@ import requests
 from .models import Restaurant, UserFavorite, Feedback
 from datetime import datetime
 
+from django.core.exceptions import ObjectDoesNotExist
+
 def search_restaurants(request):
     ''' Yelp Search Business API Call '''
 
@@ -62,61 +64,80 @@ def google_restaurants(request):
     data['result']['reviews'] = sorted(data['result']['reviews'], key=lambda x: x['time'], reverse=True)
     return JsonResponse(data)
 
+def get_restaurant(request):
+    r_id = request.POST.get("restaurant_id")
+    r_name = request.POST.get("restaurant_name")
+    r_address = request.POST.get("restaurant_address")
+    try:
+        restaurant = Restaurant.objects.get(restaurant_id=r_id)
+    except ObjectDoesNotExist:
+        restaurant = Restaurant.objects.create(
+            restaurant_id=r_id,
+            name=r_name,
+            address=r_address,
+            url="/restaurant/"+r_id
+        )
+        restaurant.save()
+    return restaurant
+
 def user_like(request):
     if request.method == "POST":
-
-        ### get the POST request data {like,restaurant_id,restaurant_name,restaurant_address}
-        is_liked = request.POST.get("like")
-        is_liked = eval(is_liked.title())
-        r_id = request.POST.get("restaurant_id")
-        r_name = request.POST.get("restaurant_name")
-        r_address = request.POST.get("restaurant_address")
         try:
-            restaurant = Restaurant.objects.get(restaurant_id=r_id)
-        except:
-            restaurant = Restaurant.objects.create(
-                restaurant_id=r_id,
-                name=r_name,
-                address=r_address,
-                url="/restaurant/"+r_id
-            )
-            restaurant.save()
 
-        ### get user favorites table
+            ### get the POST request data {like,restaurant_id,restaurant_name,restaurant_address}
+            is_liked = request.POST.get("like")
+            is_liked = eval(is_liked.title())
+            restaurant = get_restaurant(request)
+
+            ### get user favorites table
+            try:
+                ### if can not find, create new entry
+                fav = UserFavorite.objects.get(restaurant=restaurant)
+                fav.liked = is_liked
+                fav.save()
+            except ObjectDoesNotExist:
+                ### else, update the entry
+                fav = UserFavorite.objects.create(
+                    user=request.user,
+                    restaurant=restaurant,
+                    liked=is_liked
+                )
+                fav.save()
+            return JsonResponse({"status":200})
+
+        except:
+            return JsonResponse({"status":-1})
+
+def user_review(request):
+    if request.method == "POST":
         try:
-            ### if can not find, create new entry
-            fav = UserFavorite.objects.get(restaurant=restaurant)
-            fav.liked = is_liked
-            fav.save()
+
+            ### get restaurant based on id
+            stars = int(request.POST.get("stars"))
+            restaurant = get_restaurant(request)
+
+            ### save user review
+            try:
+                review = Feedback.objects.get(user=request.user,restaurant=restaurant)
+                review.feedback = request.POST.get("review")
+                review.stars = stars
+            except ObjectDoesNotExist:
+                review = Feedback.objects.create(
+                    user=request.user,
+                    restaurant=restaurant,
+                    feedback=request.POST.get("review"),
+                    stars=stars
+                )
+                review.save()
+
+            ### get user data
+            full_name = request.user.first_name + " " + request.user.last_name
+            context = {
+                "status": 200,
+                "fullName": full_name,
+                "reviewDate": datetime.now().strftime("%d %b %Y")
+            }
+            return JsonResponse(context)
+
         except:
-            ### else, update the entry
-            fav = UserFavorite.objects.create(
-                user=request.user,
-                restaurant=restaurant,
-                liked=is_liked
-            )
-            fav.save()
-
-        return JsonResponse({"status":200})
-
-# def feedback(request,pk):
-#     restaurant = Restaurant.objects.get(id=pk)
-#     feedback = request.POST.get("feedback","")
-#     stars = request.POST.get("stars",0)
-#     new_fb = Feedback.objects.create(
-#         feedback=feedback,
-#         user=request.user,
-#         restaurant=restaurant,
-#         stars=stars
-#     )
-#     new_fb.save()
-#     response = {
-#         "status": 200,
-#         "data": {
-#             "username": request.user.username,
-#             "feedback": feedback,
-#             "date": datetime.now().strftime("%d %b %Y"),
-#             "stars": int(stars) if stars != 0 else 0
-#         }
-#     }
-#     return JsonResponse(response)
+            return JsonResponse({"status":-1})
