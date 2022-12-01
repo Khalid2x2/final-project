@@ -7,6 +7,22 @@ function Spinner() {
     `;
 }
 
+function imgStars(rating) {
+    let stars = "";
+    for (let i = 1; i < 6; i++) {
+        if (i < rating) {
+            stars += '<span><img src="/static/images/rating-star_full.png" alt="rating-star" /></span>';
+        } else {
+            if (i - 0.5 == rating) {
+                stars += '<span><img src="/static/images/rating-star_half.png" alt="rating-star" /></span>';
+            } else {
+                stars += '<span><img src="/static/images/rating-star_empty.png" alt="rating-star" /></span>';
+            }
+        }
+    }
+    return stars
+}
+
 function fillResults(businesses) {
     let search_result = document.getElementById("search-result");
     let root = document.getElementById("results");
@@ -16,7 +32,7 @@ function fillResults(businesses) {
         businesses.forEach((b) => {
             let loc = b["location"];
             let address = `${loc["address1"]}, ${loc["city"]}, ${loc["state"]}, ${loc["country"]} ${loc["zip_code"]}`;
-            let rating = b["rating"];
+            let rating = imgStars(b['rating']);
             let reviews = b["review_count"];
             let item = `
                 <div class="card mt-3 me-3" style="width: 18rem;">
@@ -24,9 +40,8 @@ function fillResults(businesses) {
                     <div class="card-body">
                         <h5 class="card-title"><a class="text-dark text-decoration-none" href="/restaurant/${b["id"]}" target="_blank">${b["name"]}</a></h5>
                         <p class="card-text small mb-0">
-                            <span>Rating: </span>
-                            <span>${rating} stars</span>
-                            <span>(${reviews.toLocaleString()} reviews)</span>
+                            <span class="stars">${rating}</span>
+                            <span class="ms-1">(${reviews.toLocaleString()} reviews)</span>
                         </p>
                         <p class="card-text small">${address}</p>
                     </div>
@@ -71,7 +86,7 @@ function getYelp(zipcode, radius) {
                 let center = response["data"]["region"]["center"];
                 initMap(center, restaurants);
             } else {
-                document.getElementById("search-result").innerHTML = `<p class="text-light mt-3">No restaurants within the radius.</p>`; 
+                document.getElementById("search-result").innerHTML = `<p class="text-light mt-3">No restaurants within the radius.</p>`;
                 document.getElementById("results").innerHTML = "";
             }
         }

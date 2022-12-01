@@ -68,6 +68,12 @@ main.container #user-profile {
     height: 190px;
     object-fit: cover;
 }
+#results .stars img {
+    height: 18px;
+    width: 18px;
+    padding-bottom: 2px;
+    filter: invert(83%) sepia(44%) saturate(2458%) hue-rotate(0deg) brightness(104%) contrast(102%);
+}
 
 /* Restaurant Detail */
 .restaurant,
