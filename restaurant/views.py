@@ -106,9 +106,7 @@ def user_register(request):
         'title': 'Registration',
         'registration_page': True
     }
-    if request.method == "GET":
-        return render(request, 'register.html', context)
-    elif request.method == "POST":
+    if request.method == "POST":
         fullname = request.POST.get("name")
         email = request.POST.get("email")
         username = request.POST.get("username")
@@ -117,8 +115,8 @@ def user_register(request):
             # check if the username is exist or not
             # return the message if yes, and continue to home page if not
             user = User.objects.get(username=username)
-            messages.error(request,"is exists")
             context['username'] = username
+            context['error_message'] = "username @" + username + " is exists!"
             return render(request, 'register.html', context)
         except:
             splited_name = fullname.split(" ")
@@ -137,6 +135,7 @@ def user_register(request):
             )
             user.save()
             return redirect("login")
+    return render(request, 'register.html', context)
 
 def user_login(request):
     if request.method == "GET":
@@ -156,7 +155,10 @@ def user_login(request):
             login(request, user)
             return redirect("home")
         else:
-            return redirect("login")
+            context = {
+                "error_message": "The username or password incorrect!"
+            }
+            return render(request, "login.html", context)
 
 def user_logout(request):
     logout(request)

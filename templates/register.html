@@ -2,17 +2,7 @@
 {% load static %}
 
 {% block content %}
-
-{% for message in messages %}
-<div class="error_message alert alert-danger" role="alert">
-  <p>
-    <span>Username <strong>{{ username }}</strong> {{ message }}</span>
-    <span><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></span>
-  </p>
-</div>
-{% endfor %}
-    
-<div class="jumbotron mx-auto rounded-4 p-3">
+<div class="jumbotron mx-auto mt-5 rounded-4 p-3">
 	<div class="login-icon">
 		<img src="{% static 'images/menu.png' %}" alt="Menu Icon" />
 	</div>
@@ -21,21 +11,30 @@
         {% csrf_token %}
         <div class="form-group">
             <label style="font-size: 20px" class="font-italic">Full Name</label>
-            <input type="text" name="name" class="form-control" value="{{request.form.name}}" />
+            <input type="text" name="name" class="form-control"  />
         </div>
         <div class="form-group">
             <label style="font-size: 20px" class="font-italic">Email</label>
-            <input type="text" name="email" class="form-control" value="{{request.form.email}}" />
+            <input type="text" name="email" class="form-control" />
         </div>
         <div class="form-group">
             <label style="font-size: 20px" class="font-italic">Username</label>
-            <input type="text" name="username" class="form-control" value="{{request.form.username}}" />
+            <input type="text" name="username" class="form-control" />
         </div>
         <div class="form-group">
             <label style="font-size: 20px" class="font-italic">Password</label>
-            <input type="password" name="password" class="form-control" value="{{request.form.password}}" />
+            <input type="password" name="password" class="form-control" />
         </div>
-        <button type="submit" class="btn btn-primary mt-3 w-100">Register</button>
+        
+        {% if error_message %}
+        <p class="m-0 mt-2 text-center text-danger fw-bold">{{ error_message }}</p>
+        {% endif %}
+            
+        <button id="register-btn" type="submit" class="btn btn-primary mt-3 w-100" disabled>Register</button>
     </form>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script src="{% static 'js/register.js' %}"></script>
+{% endblock script %}

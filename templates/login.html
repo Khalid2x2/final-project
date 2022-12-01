@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="jumbotron rounded-4 p-3 mx-auto">
+<div class="jumbotron rounded-4 p-3 mx-auto mt-5">
 	<div class="login-icon">
 		<img src="{% static 'images/menu.png' %}" alt="Menu Icon" />
 	</div>
@@ -19,6 +19,9 @@
 				<input type="password" name="password" class="form-control" />
 			</div>
 			<button type="submit" class="btn w-100 btn-primary mt-3">Login</button>
+			{% if error_message %}
+			<p class="fw-bold text-danger text-center mt-3">{{ error_message }}</p>
+			{% endif %}
 		</form>
 	</div>
 	<div class="regiter-link text-center mt-2">
