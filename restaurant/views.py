@@ -81,13 +81,10 @@ def user_profile(request, username):
 
     if request.method == "POST":
 
-        # get post requests form data
+        ### edit user information
         fullname = request.POST.get("user-fullname")
         username = request.POST.get("user-name")
         email = request.POST.get("user-email")
-        # profession =
-
-        # set post request data to user object
         first_name, last_name = fn_as_sn(fullname)
         request.user.first_name = first_name
         request.user.last_name = last_name
@@ -95,7 +92,13 @@ def user_profile(request, username):
         request.user.email = email
         request.user.save()
 
-    return render(request, 'profile.html')
+    ### get user favorite places and reviews history
+    context = {
+        "likes": UserFavorite.objects.filter(user=request.user),
+        "reviews": Feedback.objects.filter(user=request.user),
+    }
+
+    return render(request, 'profile.html', context)
 
 def user_register(request):
     context = {

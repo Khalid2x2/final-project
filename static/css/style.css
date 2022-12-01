@@ -42,11 +42,12 @@ body {
 }
 
 /* Profile */
-.profile {
-    font-size: 20px;
+main.container #user-profile {
+    background-color: #fefcf3;
 }
-.profile tr td:nth-child(2) {
-    width: 20px;
+#user-profile img {
+    height: 20px;
+    padding-bottom: 3px;
 }
 
 /* Restaurants & Map */
@@ -70,7 +71,8 @@ body {
     height: 500px;
     object-fit: cover;
 }
-.fa-star, .fa-star-half-stroke {
+.fa-star,
+.fa-star-half-stroke {
     color: gold;
 }
 .restaurant__ratings .fa-heart {
