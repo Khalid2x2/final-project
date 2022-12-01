@@ -43,8 +43,15 @@ def restaurants(request):
 def restaurant_detail(request,id):
     context = {
         "restaurant_id": id,
-        "user_like_it": request.user.userfavorite_set.first().liked
+        "user_like_it": False
     }
+    try:
+        fav = UserFavorite.objects.get(
+            user=request.user,
+            restaurant=Restaurant.objects.get(restaurant_id=id),
+        )
+        context["user_like_it"] = fav.liked
+    except: pass
     return render(request, "restaurant_detail_view.html", context)
 
 # User views

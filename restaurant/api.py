@@ -87,6 +87,7 @@ def user_like(request):
             ### if can not find, create new entry
             fav = UserFavorite.objects.get(restaurant=restaurant)
             fav.liked = is_liked
+            fav.save()
         except:
             ### else, update the entry
             fav = UserFavorite.objects.create(
