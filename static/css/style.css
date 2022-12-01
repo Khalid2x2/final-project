@@ -45,9 +45,16 @@ body {
 main.container #user-profile {
     background-color: #fefcf3;
 }
-#user-profile img {
-    height: 20px;
-    padding-bottom: 3px;
+#user-profile .stars img {
+    height: 25px;
+    padding-bottom: 6px;
+    filter: invert(83%) sepia(44%) saturate(2458%) hue-rotate(0deg) brightness(104%) contrast(102%);
+}
+#user-profile .review {
+    padding: 1rem;
+}
+#user-profile .review:hover {
+    background-color: rgb(241, 241, 241);
 }
 
 /* Restaurants & Map */
@@ -73,7 +80,7 @@ main.container #user-profile {
 }
 .fa-star,
 .fa-star-half-stroke {
-    color: gold;
+    color: #ffd700;
 }
 .restaurant__ratings .fa-heart {
     cursor: pointer;

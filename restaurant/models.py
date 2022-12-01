@@ -4,8 +4,10 @@ from django.contrib.auth.models import User
 class Restaurant(models.Model):
     restaurant_id = models.CharField(max_length=256,unique=True,blank=True,null=True)
     name = models.CharField(max_length=256)
-    address = models.CharField(max_length=600)
-    url = models.CharField(max_length=788,unique=True,default="#")
+    address1 = models.CharField(max_length=600,default="")
+    address2 = models.CharField(max_length=600,default="")
+    url = models.CharField(max_length=788,default="#")
+    image_url = models.CharField(max_length=1200,default="#")
 
     def __str__(self) -> str:
         return self.name

@@ -1,12 +1,10 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
-<div id="user-profile" class="p-3 pt-5" style="min-height: 100vh;">
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div id="user-profile" class="p-3 pt-5" style="min-height: 100vh">
     <h1 class="text-center">User Profile</h1>
     <div class="row p-5">
-        <div class="col">
+        <div class="col user-info">
             <h5>User Info</h5>
+            {% csrf_token %}
             <table>
                 <tbody>
                     <tr>
@@ -29,47 +27,47 @@
             <span class="badge bg-primary mt-3" type="button">Edit</span>
         </div>
     </div>
-    <div class="row px-5">
-        <div class="col">
-            <h5>Favorites Restaurants</h5>
 
+    <div class="row px-5 mb-5">
+        <div class="favorite-restaurants col">
+            <h5>Favorite Restaurants</h5>
             {% for favorite in likes %}
-
-            <p>{{ favorite }}</p>
-                
+            <div class="card mt-2 d-flex flex-row overflow-hidden">
+                <img src="{{ favorite.restaurant.image_url }}" class="w-50" alt="Photo of {{ favorite.restaurant.name }}" />
+                <div class="card-body">
+                    <h5 class="card-title"><a class="text-dark text-decoration-none" href="{{ favorite.restaurant.url }}">{{ favorite.restaurant.name }}</a></h5>
+                    <p class="card-text m-0">{{ favorite.restaurant.address1 }}</p>
+                    <p class="card-text m-0">{{ favorite.restaurant.address2 }}</p>
+                </div>
+            </div>
             {% endfor %}
-                
         </div>
-        <div class="col">
+        <div class="reviews col">
             <h5>Reviews History</h5>
-            
-            <div>
+            {% for review in reviews %}
+            <div class="review">
                 <p class="m-0">
-                    <a class="text-dark text-decoration-none" href="#"><strong>Place</strong></a>
+                    <a class="text-dark text-decoration-none" href="{{ review.restaurant.url }}"><strong>{{ review.restaurant.name }}</strong></a>
                     <span class="text-secondary">
-                        <span class="stars">
-                            <img src="/static/images/star-50.png" alt="star">
+                        <span class="stars ms-1">
+                            {% for i in stars %} {% if i <= review.stars %}
+                            <img src="/static/images/rating-star_full.png" alt="star" />
+                            {% else %}
+                            <img src="/static/images/rating-star_empty.png" alt="star" />
+                            {% endif %} {% endfor %}
                         </span>
-                        <span>
+                        <span class="ms-1">
                             <span><i class="fa-regular fa-calendar"></i></span>
-                            <span>11/11/2022</span>
+                            <span>{{ review.created|date:'d/m/Y' }}</span>
                         </span>
                     </span>
                 </p>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut quasi magnam dolore quaerat quod natus laudantium dicta qui accusantium obcaecati. Dicta deserunt eaque quos odit?</p>
+                <p class="m-0">{{ review.feedback }}</p>
             </div>
-            
-            {% for review in reviews %}
-
-            <p>{{ review }}</p>
-                
             {% endfor %}
-                
         </div>
     </div>
 </div>
-{% endblock content %}
-
-{% block script %}
+{% endblock content %} {% block script %}
 <script src="{% static 'js/profile.js' %}"></script>
 {% endblock script %}

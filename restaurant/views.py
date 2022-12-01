@@ -96,6 +96,7 @@ def user_profile(request, username):
     context = {
         "likes": UserFavorite.objects.filter(user=request.user),
         "reviews": Feedback.objects.filter(user=request.user),
+        "stars": range(1,6),
     }
 
     return render(request, 'profile.html', context)

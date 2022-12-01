@@ -1,157 +1,154 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block content %}
-{% csrf_token %}
-<h1 class="text-light">Restaurant Detail</h1>
-<div id="carouselExampleIndicators" class="carousel slide p-3" data-bs-ride="true">
-    <div class="carousel-indicators">
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="pt-5">
+    {% csrf_token %}
+    <h1 class="text-light">Restaurant Detail</h1>
+    <div id="carouselExampleIndicators" class="carousel slide p-3" data-bs-ride="true">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner"></div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
-    <div class="carousel-inner"></div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-</div>
-<div class="restaurant container row d-flex mx-auto">
-    <div class="col-4">
-        <div class="restaurant__detail p-4">
-            <h3 id="{{ restaurant_id }}" class="restaurant__title">Restaurant Name</h3>
-            <div class="restaurant__address ms-4 mb-3">
-                <p id="restaurant__address1" class="my-0">Address</p>
-                <p id="restaurant__address2" class="mb-2">Country</p>
-                <p id="restaurant__phonenumber" class="mb-2">Phone Number</p>
-                <p class="my-0">
-                    <a id="restaurant__website" class="link-secondary text-decoration-none" target="_blank" href="#">
-                        <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-                        <span>website</span>
-                    </a>
-                </p>
-                <p class="my-0">
-                    <a id="restaurant__url" class="link-secondary text-decoration-none" target="_blank" href="#">
-                        <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
-                        <span>yelp</span>
-                    </a>
-                </p>
-            </div>
-            <div class="restaurant__ratings mb-3">
-                <strong>Ratings:</strong>
-                <div class="mt-2 ms-4">
-                    <table class="table table-borderless table-sm small w-auto mb-0">
-                        <tbody>
-                            <tr>
-                                <td>Yelp</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Google</td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td>Favorite</td>
-                                {% if user_like_it %}
-                                <td><i class="fa-solid fa-heart" onclick="fillTheHeart()"></i></td>
-                                {% else %}
-                                <td><i class="fa-regular fa-heart" onclick="fillTheHeart()"></i></td>
-                                {% endif %}
-                            </tr>
-                        </tbody>
-                    </table>
+    <div class="restaurant container row d-flex mx-auto">
+        <div class="col-4">
+            <div class="restaurant__detail p-4">
+                <h3 id="{{ restaurant_id }}" class="restaurant__title">Restaurant Name</h3>
+                <div class="restaurant__address ms-4 mb-3">
+                    <p id="restaurant__address1" class="my-0">Address</p>
+                    <p id="restaurant__address2" class="mb-2">Country</p>
+                    <p id="restaurant__phonenumber" class="mb-2">Phone Number</p>
+                    <p class="my-0">
+                        <a id="restaurant__website" class="link-secondary text-decoration-none" target="_blank" href="#">
+                            <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                            <span>website</span>
+                        </a>
+                    </p>
+                    <p class="my-0">
+                        <a id="restaurant__url" class="link-secondary text-decoration-none" target="_blank" href="#">
+                            <span><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+                            <span>yelp</span>
+                        </a>
+                    </p>
                 </div>
-            </div>
-            <div class="restaurant__schedule">
-                <strong>Schedule:</strong>
-                <div class="ms-4">
-                    <h6 id="restaurant__is-open">Open Now</h6>
-                    <table id="restaurant__schedule" class="table table-bordered table-sm small w-auto text-dark bg-light mt-2 mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center" colspan="2">HOURS</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <div class="restaurant__ratings mb-3">
+                    <strong>Ratings:</strong>
+                    <div class="mt-2 ms-4">
+                        <table class="table table-borderless table-sm small w-auto mb-0">
+                            <tbody>
+                                <tr>
+                                    <td>Yelp</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Google</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Favorite</td>
+                                    {% if user_like_it %}
+                                    <td><i class="fa-solid fa-heart" onclick="fillTheHeart()"></i></td>
+                                    {% else %}
+                                    <td><i class="fa-regular fa-heart" onclick="fillTheHeart()"></i></td>
+                                    {% endif %}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="restaurant__schedule">
+                    <strong>Schedule:</strong>
+                    <div class="ms-4">
+                        <h6 id="restaurant__is-open">Open Now</h6>
+                        <table id="restaurant__schedule" class="table table-bordered table-sm small w-auto text-dark bg-light mt-2 mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" colspan="2">HOURS</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col mb-5">
-        <div class="mt-4">
-            <h3>Restaurant Map</h3>
-            <div id="map"></div>
-        </div>
-        <div id="reviews">
-            <h3 class="mt-4">Reviews</h3>
-            <div class="rounded-3 border overflow-hidden">
-                <div class="reviews__yelp">
-                    <div class="head d-flex justify-content-between" style="border-bottom: 0">
-                        <h6 class="m-0 p-3">Yelp Review</h6>
-                        <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
+        <div class="col mb-5">
+            <div class="mt-4">
+                <h3>Restaurant Map</h3>
+                <div id="map"></div>
+            </div>
+            <div id="reviews">
+                <h3 class="mt-4">Reviews</h3>
+                <div class="rounded-3 border overflow-hidden">
+                    <div class="reviews__yelp">
+                        <div class="head d-flex justify-content-between" style="border-bottom: 0">
+                            <h6 class="m-0 p-3">Yelp Review</h6>
+                            <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
+                        </div>
+                        <div class="reviews" style="display: none"></div>
                     </div>
-                    <div class="reviews" style="display: none"></div>
-                </div>
-                <div class="reviews__google">
-                    <div class="head d-flex justify-content-between" style="border-bottom: 0px">
-                        <h6 class="m-0 p-3">Google Review</h6>
-                        <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
+                    <div class="reviews__google">
+                        <div class="head d-flex justify-content-between" style="border-bottom: 0px">
+                            <h6 class="m-0 p-3">Google Review</h6>
+                            <button class="btn bg-transparent"><i class="fa-solid fa-chevron-left"></i></button>
+                        </div>
+                        <div class="reviews" style="display: none"></div>
                     </div>
-                    <div class="reviews" style="display: none"></div>
-                </div>
-                <div class="reviews__user">
-                    <div class="head d-flex justify-content-between" style="border-bottom: 0px">
-                        <h6 class="m-0 p-3">User Review</h6>
-                        <button class="btn bg-transparent"><i class="fa-solid fa-angle-down"></i></button>
-                    </div>
-                    <div class="reviews" style="display: block">
-
-                        {% if user_review %}
-                        <div class="review rounded border m-3 p-3">
-                            <div class="d-flex">
-                                <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="avatar of {{ user_fullname }}" />
-                                <div class="align-self-center ms-3">
-                                    <p class="m-0">
-                                        <span class="fw-bold"><a class="text-dark text-decoration-none" href="{% url 'user-profile' user.username %}">{{ user_fullname }}</a></span>
-                                        <span>{{ user_review.created|date:'d M Y' }}</span>
-                                    </p>
-                                    <p class="rating-stars m-0" value="{{ user_review.stars }}">
-                                        {{ stars|safe }}
-                                        <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
-                                    </p>
+                    <div class="reviews__user">
+                        <div class="head d-flex justify-content-between" style="border-bottom: 0px">
+                            <h6 class="m-0 p-3">User Review</h6>
+                            <button class="btn bg-transparent"><i class="fa-solid fa-angle-down"></i></button>
+                        </div>
+                        <div class="reviews" style="display: block">
+                            {% if user_review %}
+                            <div class="review rounded border m-3 p-3">
+                                <div class="d-flex">
+                                    <img class="border border-secondary" src="{% static 'images/user-icon.png' %}" alt="avatar of {{ user_fullname }}" />
+                                    <div class="align-self-center ms-3">
+                                        <p class="m-0">
+                                            <span class="fw-bold"><a class="text-dark text-decoration-none" href="{% url 'user-profile' user.username %}">{{ user_fullname }}</a></span>
+                                            <span>{{ user_review.created|date:'d M Y' }}</span>
+                                        </p>
+                                        <p class="rating-stars m-0" value="{{ user_review.stars }}">
+                                            {{ stars|safe }}
+                                            <span class="badge bg-info px-2" type="button" onclick="editBtn(this);">Edit</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="review__content m-0">{{ user_review.feedback.strip }}</p>
                                 </div>
                             </div>
-                            <div class="mt-2">
-                                <p class="review__content m-0">{{ user_review.feedback.strip }}</p>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="review rounded border m-3 p-3">
-                            <div>
-                                <h6>Leave Your Review</h6>
-                                <div class="align-self-center">
-                                    <p id="rating-stars" class="rating-stars m-0" value="0">
-                                        <strong>Ratings:</strong>
-                                        <span><i class="fa-regular fa-star"></i></span>
-                                        <span><i class="fa-regular fa-star"></i></span>
-                                        <span><i class="fa-regular fa-star"></i></span>
-                                        <span><i class="fa-regular fa-star"></i></span>
-                                        <span><i class="fa-regular fa-star"></i></span>
-                                    </p>
+                            {% else %}
+                            <div class="review rounded border m-3 p-3">
+                                <div>
+                                    <h6>Leave Your Review</h6>
+                                    <div class="align-self-center">
+                                        <p id="rating-stars" class="rating-stars m-0" value="0">
+                                            <strong>Ratings:</strong>
+                                            <span><i class="fa-regular fa-star"></i></span>
+                                            <span><i class="fa-regular fa-star"></i></span>
+                                            <span><i class="fa-regular fa-star"></i></span>
+                                            <span><i class="fa-regular fa-star"></i></span>
+                                            <span><i class="fa-regular fa-star"></i></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 d-flex flex-column">
+                                    <textarea id="user-review" class="form-control w-100 m-0"></textarea>
+                                    <button id="review-btn" class="btn btn-primary mt-2" type="button" onclick="reviewSubmitListener()">Submit</button>
                                 </div>
                             </div>
-                            <div class="mt-2 d-flex flex-column">
-                                <textarea id="user-review" class="form-control w-100 m-0"></textarea>
-                                <button id="review-btn" class="btn btn-primary mt-2" type="button" onclick="reviewSubmitListener()">Submit</button>
-                            </div>
+                            {% endif %}
                         </div>
-                        {% endif %}
-                            
                     </div>
                 </div>
             </div>

@@ -2,32 +2,34 @@
 {% load static %}
 
 {% block content %}
-<h1 class="page-title text-light">Restaurants</h1>
-<div>
-    <div class="restaurant-search d-flex">
-        <div class="me-2">
-            <label class="text-light" for="zip-code">Zipcode</label>
-            <input name="zipcode" id="zipcode" type="number" class="form-control">
+<div class="pt-5">
+    <h1 class="page-title text-light">Restaurants</h1>
+    <div>
+        <div class="restaurant-search d-flex">
+            <div class="me-2">
+                <label class="text-light" for="zip-code">Zipcode</label>
+                <input name="zipcode" id="zipcode" type="number" class="form-control">
+            </div>
+            <div class="me-2">
+                <label class="text-light" for="radius">Radius</label>
+                <select name="radius" id="radius" class="form-control">
+                    <option value="8046" selected>5 mi</option>
+                    <option value="16093">10 mi</option>
+                    <option value="24140">15 mi</option>
+                    <option value="32186">20 mi</option>
+                    <option value="40000">25 mi</option>
+                </select>
+            </div>
+            <div class="align-self-end">
+                <button class="btn btn-primary" onclick="getRestaurants()">Submit</button>
+            </div>
         </div>
-        <div class="me-2">
-            <label class="text-light" for="radius">Radius</label>
-            <select name="radius" id="radius" class="form-control">
-                <option value="8046" selected>5 mi</option>
-                <option value="16093">10 mi</option>
-                <option value="24140">15 mi</option>
-                <option value="32186">20 mi</option>
-                <option value="40000">25 mi</option>
-            </select>
-        </div>
-        <div class="align-self-end">
-            <button class="btn btn-primary" onclick="getRestaurants()">Submit</button>
-        </div>
+        <div id="search-result"></div>
+        <!-- <div id="map" class="mt-3"></div> -->
+        <div id="results" class="restaurants-container d-flex flex-wrap justify-content-center mb-5"></div>
     </div>
-    <div id="search-result"></div>
-    <!-- <div id="map" class="mt-3"></div> -->
-    <div id="results" class="restaurants-container d-flex flex-wrap justify-content-center mb-5"></div>
+    {% csrf_token %}
 </div>
-{% csrf_token %}
 {% endblock content %}
 
 {% block script %}

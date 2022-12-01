@@ -66,15 +66,15 @@ def google_restaurants(request):
 
 def get_restaurant(request):
     r_id = request.POST.get("restaurant_id")
-    r_name = request.POST.get("restaurant_name")
-    r_address = request.POST.get("restaurant_address")
     try:
         restaurant = Restaurant.objects.get(restaurant_id=r_id)
     except ObjectDoesNotExist:
         restaurant = Restaurant.objects.create(
             restaurant_id=r_id,
-            name=r_name,
-            address=r_address,
+            name=request.POST.get("restaurant_name"),
+            address1=request.POST.get("restaurant_address1"),
+            address2=request.POST.get("restaurant_address2"),
+            image_url=request.POST.get("restaurant_image_url"),
             url="/restaurant/"+r_id
         )
         restaurant.save()
@@ -139,5 +139,26 @@ def user_review(request):
             }
             return JsonResponse(context)
 
+        except:
+            return JsonResponse({"status":-1})
+
+def edit_user_profile(request):
+    if request.method == "POST":
+        try:
+            ### split the fullname as first and last name
+            splits_name = request.POST.get("name","").split(" ")
+            if len(splits_name) > 0:
+                first_name = splits_name[0]
+                last_name = " ".join(splits_name[1:])
+            elif len(splits_name) == 1:
+                first_name = splits_name[0]
+                last_name = ""
+
+            ### change user info
+            request.user.first_name = first_name
+            request.user.last_name = last_name
+            request.user.email = request.POST.get("email")
+            request.user.save()
+            return JsonResponse({"status":200})
         except:
             return JsonResponse({"status":-1})

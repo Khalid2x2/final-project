@@ -44,7 +44,7 @@ function getYelp(zipcode, radius) {
     Spinner();
 
     // Prepare the endpoint and csrf token
-    let url = "http://localhost:8000/search-restaurants/";
+    let url = document.location.origin + "/search-restaurants/";
     let csrf = document.querySelector("input[name=csrfmiddlewaretoken]").value;
 
     let http = new XMLHttpRequest();

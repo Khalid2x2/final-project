@@ -1,27 +1,29 @@
+// Restaurant data collecting function
+function getRestaurantAsForm(){
+    const restaurant = new FormData();
+    restaurant.append("restaurant_id", document.querySelector(".restaurant__title").getAttribute("id"))
+    restaurant.append("restaurant_name", document.querySelector(".restaurant__title").innerText)
+    restaurant.append("restaurant_address1", document.getElementById("restaurant__address1").innerText)
+    restaurant.append("restaurant_address2", document.getElementById("restaurant__address2").innerText)
+    restaurant.append("restaurant_image_url", document.querySelector("#carouselExampleIndicators .carousel-inner img").getAttribute("src"))
+    return restaurant
+}
 // User favorite
 function fillTheHeart() {
     // get the heart icon
     const heart = document.querySelector(".fa-heart");
     let like = heart.classList.contains("fa-regular") ? true : false;
 
-    // get csrf token
-    let csrf = getCSRF();
-
     // make a post request
-    let formdata = new FormData();
-    let r_id = document.querySelector(".restaurant__title");
-    let restaurant_address = document.getElementById("restaurant__address1").innerText + " " + document.getElementById("restaurant__address2");
+    let formdata = getRestaurantAsForm();
     formdata.append("like", like);
-    formdata.append("restaurant_id", r_id.getAttribute("id"));
-    formdata.append("restaurant_name", r_id.innerText);
-    formdata.append("restaurant_address", restaurant_address);
 
     // open post request and send form data
     let http = new XMLHttpRequest();
-    http.open("POST", "http://localhost:8000/user-like/", true);
+    http.open("POST", document.location.origin + "/user-like/", true);
 
     // set the request headers
-    http.setRequestHeader("X-CSRFToken", csrf);
+    http.setRequestHeader("X-CSRFToken", getCSRF());
     http.setRequestHeader("Access-Control-Allow-Origin", "*");
     http.setRequestHeader("Access-Control-Allow-Methods", "POST");
     http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
@@ -161,7 +163,7 @@ function editBtn(element) {
 function reviewSubmitListener() {
     // open post request and send form data
     let http = new XMLHttpRequest();
-    http.open("POST", "http://localhost:8000/user-review/", true);
+    http.open("POST", document.location.origin + "/user-review/", true);
 
     // set the request headers
     http.setRequestHeader("X-CSRFToken", getCSRF());
@@ -189,18 +191,13 @@ function reviewSubmitListener() {
     };
 
     // get the review data
-    let r_id = document.querySelector(".restaurant__title");
-    let restaurant_address = document.getElementById("restaurant__address1").innerText + " " + document.getElementById("restaurant__address2");
     let stars = document.getElementById("rating-stars").getAttribute("value");
     let review = document.getElementById("user-review").value;
 
     // prepare the form variable
-    let formdata = new FormData();
+    let formdata = getRestaurantAsForm();
     formdata.append("review", review);
     formdata.append("stars", stars);
-    formdata.append("restaurant_id", r_id.getAttribute("id"));
-    formdata.append("restaurant_name", r_id.innerText);
-    formdata.append("restaurant_address", restaurant_address);
 
     // send the data
     http.send(formdata);
@@ -208,22 +205,24 @@ function reviewSubmitListener() {
 
 function ratingStarsListener() {
     const feedback_stars = document.getElementById("rating-stars");
-    const stars = feedback_stars.querySelectorAll(".fa-star");
-    stars.forEach((star, i) => {
-        star.addEventListener("click", () => {
-            // set stars value
-            feedback_stars.setAttribute("value", i + 1);
+    if (feedback_stars) {
+        const stars = feedback_stars.querySelectorAll(".fa-star");
+        stars.forEach((star, i) => {
+            star.addEventListener("click", () => {
+                // set stars value
+                feedback_stars.setAttribute("value", i + 1);
 
-            // change the previous and the clicked stars to solid
-            for (let j = 0; j < stars.length; j++) {
-                if (j <= i) {
-                    stars[j].classList.replace("fa-regular", "fa-solid");
-                } else {
-                    stars[j].classList.replace("fa-solid", "fa-regular");
+                // change the previous and the clicked stars to solid
+                for (let j = 0; j < stars.length; j++) {
+                    if (j <= i) {
+                        stars[j].classList.replace("fa-regular", "fa-solid");
+                    } else {
+                        stars[j].classList.replace("fa-solid", "fa-regular");
+                    }
                 }
-            }
+            });
         });
-    });
+    }
 }
 ratingStarsListener();
 
@@ -307,7 +306,7 @@ function restaurantRatings(element, stars, review_count) {
 function getRestaurantsDetail() {
     let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
     let http = new XMLHttpRequest();
-    http.open("GET", "http://localhost:8000/restaurant/yelp/" + restaurant_id, true);
+    http.open("GET", document.location.origin + "/restaurant/yelp/" + restaurant_id, true);
     http.setRequestHeader("Access-Control-Allow-Origin", "*");
     http.setRequestHeader("Access-Control-Allow-Methods", "GET");
     http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
@@ -362,7 +361,7 @@ function restaurantsReviews(reviews) {
 function getRestaurantReviews() {
     let restaurant_id = document.querySelector(".restaurant__title").getAttribute("id");
     let http = new XMLHttpRequest();
-    http.open("GET", "http://localhost:8000/restaurant/yelp-reviews/" + restaurant_id, true);
+    http.open("GET", document.location.origin + "/restaurant/yelp-reviews/" + restaurant_id, true);
     http.setRequestHeader("Access-Control-Allow-Origin", "*");
     http.setRequestHeader("Access-Control-Allow-Methods", "GET");
     http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");

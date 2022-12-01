@@ -16,7 +16,7 @@ var months = {
 function getGoogleReviews(place) {
     let query = `?q="${place}"`;
     let http = new XMLHttpRequest();
-    http.open("GET", "http://localhost:8000/google-restaurants/" + query, true);
+    http.open("GET", document.location.origin + "/google-restaurants/" + query, true);
     http.setRequestHeader("Access-Control-Allow-Origin", "*");
     http.setRequestHeader("Access-Control-Allow-Methods", "GET");
     http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
