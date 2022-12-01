@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 
-from . import api
+from .models import Restaurant, UserFavorite
 
 @login_required()
 def index(request):
@@ -39,8 +39,12 @@ def restaurants(request):
     }
     return render(request, 'restaurants.html', context)
 
+@login_required()
 def restaurant_detail(request,id):
-    context = {"restaurant_id": id}
+    context = {
+        "restaurant_id": id,
+        "user_like_it": request.user.userfavorite_set.first().liked
+    }
     return render(request, "restaurant_detail_view.html", context)
 
 # User views

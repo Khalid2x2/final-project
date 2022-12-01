@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from decouple import config
 import requests
 
-from .models import Restaurant, Feedback
+from .models import Restaurant, UserFavorite, Feedback
 from datetime import datetime
 
 def search_restaurants(request):
@@ -61,6 +61,42 @@ def google_restaurants(request):
     data = requests.get("https://maps.googleapis.com/maps/api/place/details/json?fields=rating%2Creview%2Cwebsite", params=params).json()
     data['result']['reviews'] = sorted(data['result']['reviews'], key=lambda x: x['time'], reverse=True)
     return JsonResponse(data)
+
+def user_like(request):
+    if request.method == "POST":
+
+        ### get the POST request data {like,restaurant_id,restaurant_name,restaurant_address}
+        is_liked = request.POST.get("like")
+        is_liked = eval(is_liked.title())
+        r_id = request.POST.get("restaurant_id")
+        r_name = request.POST.get("restaurant_name")
+        r_address = request.POST.get("restaurant_address")
+        try:
+            restaurant = Restaurant.objects.get(restaurant_id=r_id)
+        except:
+            restaurant = Restaurant.objects.create(
+                restaurant_id=r_id,
+                name=r_name,
+                address=r_address,
+                url="/restaurant/"+r_id
+            )
+            restaurant.save()
+
+        ### get user favorites table
+        try:
+            ### if can not find, create new entry
+            fav = UserFavorite.objects.get(restaurant=restaurant)
+            fav.liked = is_liked
+        except:
+            ### else, update the entry
+            fav = UserFavorite.objects.create(
+                user=request.user,
+                restaurant=restaurant,
+                liked=is_liked
+            )
+            fav.save()
+
+        return JsonResponse({"status":200})
 
 # def feedback(request,pk):
 #     restaurant = Restaurant.objects.get(id=pk)

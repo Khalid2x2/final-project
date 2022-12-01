@@ -1,13 +1,52 @@
 // User favorite
 function fillTheHeart() {
+    // get the heart icon
     const heart = document.querySelector(".fa-heart");
-    if (heart.classList.contains("fa-regular")) {
-        heart.classList.remove("fa-regular");
-        heart.classList.add("fa-solid");
-    } else {
-        heart.classList.remove("fa-solid");
-        heart.classList.add("fa-regular");
-    }
+    let like = heart.classList.contains("fa-regular") ? true : false;
+
+    // get csrf token
+    let csrf = getCSRF();
+
+    // make a post request
+    let formdata = new FormData();
+    let r_id = document.querySelector(".restaurant__title");
+    let restaurant_address = document.getElementById("restaurant__address1").innerText + " " + document.getElementById("restaurant__address2");
+    formdata.append("like", like);
+    formdata.append("restaurant_id", r_id.getAttribute("id"));
+    formdata.append("restaurant_name", r_id.innerText);
+    formdata.append("restaurant_address", restaurant_address);
+
+    // open post request and send form data
+    let http = new XMLHttpRequest();
+    http.open("POST", "http://localhost:8000/user-like/", true);
+
+    // set the request headers
+    http.setRequestHeader("X-CSRFToken", csrf);
+    http.setRequestHeader("Access-Control-Allow-Origin", "*");
+    http.setRequestHeader("Access-Control-Allow-Methods", "POST");
+    http.setRequestHeader("Access-Control-Allow-Headers", "accept, content-type");
+    http.setRequestHeader("Access-Control-Max-Age", "1728000");
+
+    // catch the response
+    http.onreadystatechange = function () {
+        if (http.readyState == 4 && http.status == 200) {
+            let response = JSON.parse(http.responseText);
+            if (response.status == 200) {
+                if (like) {
+                    heart.classList.remove("fa-regular");
+                    heart.classList.add("fa-solid");
+                } else {
+                    heart.classList.remove("fa-solid");
+                    heart.classList.add("fa-regular");
+                }
+            } else {
+                alert("Network Connection Error");
+            }
+        }
+    };
+
+    // send the data
+    http.send(formdata);
 }
 
 // Reviews drop down
@@ -142,6 +181,8 @@ function reviewSubmitListener() {
         let formdata = new FormData();
         formdata.append("review", review);
         formdata.append("stars", stars);
+
+        console.log("review submission clicked");
     });
 }
 reviewSubmitListener();

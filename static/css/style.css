@@ -74,6 +74,7 @@ body {
     color: gold;
 }
 .restaurant__ratings .fa-heart {
+    cursor: pointer;
     color: red;
 }
 .restaurant #map {

@@ -56,7 +56,11 @@
                             </tr>
                             <tr>
                                 <td>Favorite</td>
+                                {% if user_like_it %}
+                                <td><i class="fa-solid fa-heart" onclick="fillTheHeart()"></i></td>
+                                {% else %}
                                 <td><i class="fa-regular fa-heart" onclick="fillTheHeart()"></i></td>
+                                {% endif %}
                             </tr>
                         </tbody>
                     </table>
