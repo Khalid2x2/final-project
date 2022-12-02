@@ -21,12 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*.heroku.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['localhost','127.0.0.1','*.heroku.com']
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "login"
-
 
 # Application definition
 INSTALLED_APPS = [
