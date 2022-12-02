@@ -23,7 +23,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost','127.0.0.1','*.heroku.com']
+ALLOWED_HOSTS = ['*']
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "login"
 
