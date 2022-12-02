@@ -1,0 +1,125 @@
+/* Body */
+body {
+    min-height: 100vh;
+    background-size: cover;
+    background-attachment: fixed;
+}
+.home__title {
+    color: white;
+    background-color: rgba(13, 109, 253, 0.6);
+}
+
+/* Navbar */
+#navbarNavAltMarkup a.nav-link:hover {
+    font-weight: bold;
+}
+
+/* Login & Register */
+.jumbotron {
+    width: 310px;
+    background-color: #f0f8ffb3;
+}
+.login-icon {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.login-icon img {
+    width: 90px;
+}
+
+.restaurant img {
+    border: 1px solid gray;
+    width: 200px;
+    height: 150px;
+}
+.feedbacks {
+    background-color: #faf7f0;
+}
+.stars {
+    color: gold;
+    cursor: pointer;
+}
+
+/* Profile */
+main.container #user-profile {
+    background-color: #fefcf3;
+}
+#user-profile .stars img {
+    height: 25px;
+    padding-bottom: 6px;
+    filter: invert(83%) sepia(44%) saturate(2458%) hue-rotate(0deg) brightness(104%) contrast(102%);
+}
+#user-profile .review {
+    padding: 1rem;
+}
+#user-profile .review:hover {
+    background-color: rgb(241, 241, 241);
+}
+
+/* Restaurants & Map */
+#search-result + #map {
+    width: 100%;
+    height: 500px;
+    border: 1px solid blue;
+}
+#results .card img {
+    width: 18rem;
+    height: 190px;
+    object-fit: cover;
+}
+#results .stars img {
+    height: 18px;
+    width: 18px;
+    padding-bottom: 2px;
+    filter: invert(83%) sepia(44%) saturate(2458%) hue-rotate(0deg) brightness(104%) contrast(102%);
+}
+
+/* Restaurant Detail */
+.restaurant,
+#carouselExampleIndicators {
+    background-color: #fefcf3 !important;
+}
+.carousel-inner img {
+    height: 500px;
+    object-fit: cover;
+}
+.fa-star,
+.fa-star-half-stroke {
+    color: #ffd700;
+}
+.restaurant__ratings .fa-heart {
+    cursor: pointer;
+    color: red;
+}
+.restaurant #map {
+    width: 100%;
+    height: 300px;
+}
+.rating-stars {
+    cursor: pointer;
+}
+.reviews__yelp .head:hover,
+.reviews__google .head:hover,
+.reviews__user .head:hover {
+    background-color: #eff5f5;
+}
+#reviews .review img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 100%;
+    border: 0px;
+    margin: 5px;
+}
+#reviews .head button {
+    border: 0;
+}
+#reviews .reviews {
+    max-height: 356px;
+    overflow-y: auto;
+}
+.reviews__yelp,
+.reviews__google {
+    border-bottom: 1px solid #dee2e6;
+}
